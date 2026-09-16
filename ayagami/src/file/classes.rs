@@ -479,9 +479,13 @@ declare_object!(ScreenColor {
     }
 });
 impl_validator!(ScreenColor, |&self| {
-    check!(*self.f_r() >= 0. && *self.f_r() <= 1.);
-    check!(*self.f_g() >= 0. && *self.f_g() <= 1.);
-    check!(*self.f_b() >= 0. && *self.f_b() <= 1.);
+    // Older Cubism models can contain screen-color components outside the
+    // nominal 0..=1 range. Keep accepting finite values as earlier Ayagami
+    // revisions did; the renderer can consume them without rejecting the
+    // entire model during parsing.
+    check!(self.f_r().is_finite());
+    check!(self.f_g().is_finite());
+    check!(self.f_b().is_finite());
 });
 
 declare_object!(BlendParamMap {
