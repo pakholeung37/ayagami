@@ -24,7 +24,8 @@ modules/gd-cubism/.venv/bin/python -m pip install scons==4.7.0
 ## Run
 
 Open `demos/godot/project.godot` with Godot 4.7 or newer, or launch it from
-the monorepo root:
+the monorepo root. This project selects Purism Core by default through
+`gd_cubism_provider.txt` when its addon is staged:
 
 ```sh
 /Applications/Godot_mono.app/Contents/MacOS/Godot \

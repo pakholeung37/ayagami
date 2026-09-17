@@ -13,6 +13,7 @@ DEFAULT_SOURCE = REPO_ROOT / "modules/gd-cubism/addons/gd_cubism"
 EXTENSION_RESOURCE = "res://addons/gd_cubism/gd_cubism.gdextension"
 LEGACY_ADDON_NAME = "ayagami_godot"
 CORE_PROVIDERS = ("cubism", "ayagami", "purism")
+PROJECT_PROVIDER_FILE = "gd_cubism_provider.txt"
 
 
 def select_core_provider(addon_root: Path, core_provider: str) -> None:
@@ -31,7 +32,7 @@ def stage_addon(
     project_root: Path,
     addon_source: Path = DEFAULT_SOURCE,
     *,
-    core_provider: str = "cubism",
+    core_provider: str | None = None,
     write_extension_cache: bool = True,
 ) -> Path:
     project_root = project_root.resolve()
@@ -40,6 +41,10 @@ def stage_addon(
         raise FileNotFoundError(f"addon source does not exist: {addon_source}")
     if not (project_root / "project.godot").is_file():
         raise FileNotFoundError(f"Godot project does not exist: {project_root}")
+
+    provider_file = project_root / PROJECT_PROVIDER_FILE
+    if core_provider is None and provider_file.is_file():
+        core_provider = provider_file.read_text(encoding="utf-8").strip()
 
     destination = project_root / "addons/gd_cubism"
     legacy_destination = project_root / "addons" / LEGACY_ADDON_NAME
@@ -51,7 +56,8 @@ def stage_addon(
         shutil.rmtree(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(addon_source, destination)
-    select_core_provider(destination, core_provider)
+    if core_provider is not None:
+        select_core_provider(destination, core_provider)
 
     if write_extension_cache:
         extension_cache = project_root / ".godot/extension_list.cfg"
@@ -78,7 +84,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("projects", nargs="+", type=Path, help="Godot project roots")
     parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
-    parser.add_argument("--core-provider", choices=CORE_PROVIDERS, default="cubism")
+    parser.add_argument("--core-provider", choices=CORE_PROVIDERS)
     parser.add_argument("--no-extension-cache", action="store_true")
     args = parser.parse_args()
 
