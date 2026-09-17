@@ -17,11 +17,11 @@ cd /path/to/ayagami
 cargo build --locked -p ayagami --features cubism-core-abi
 
 cd modules/gd-cubism
-rm -f addons/gd_cubism/bin/libgd_cubism.macos.debug.framework/libgd_cubism.macos.debug
+CUBISM_CORE_PROVIDER=ayagami \
 CUBISM_CORE_LIBRARY=../../target/debug/libayagami.a \
   .venv/bin/python -m SCons platform=macos arch=arm64 target=template_debug -j8
 cd ../..
-python3 tools/stage_godot_addon.py demos/godot
+python3 tools/stage_godot_addon.py --core-provider ayagami demos/godot
 ```
 
 For the complete build/copy/test/restore cycle, run

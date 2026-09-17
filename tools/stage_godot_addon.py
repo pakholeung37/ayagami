@@ -12,12 +12,26 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE = REPO_ROOT / "modules/gd-cubism/addons/gd_cubism"
 EXTENSION_RESOURCE = "res://addons/gd_cubism/gd_cubism.gdextension"
 LEGACY_ADDON_NAME = "ayagami_godot"
+CORE_PROVIDERS = ("cubism", "ayagami", "purism")
+
+
+def select_core_provider(addon_root: Path, core_provider: str) -> None:
+    """Select one of the coexisting provider binaries in a staged addon."""
+    if core_provider not in CORE_PROVIDERS:
+        raise ValueError(f"unknown Core provider: {core_provider}")
+    descriptor = addon_root / "gd_cubism.gdextension"
+    contents = descriptor.read_text(encoding="utf-8")
+    descriptor.write_text(
+        contents.replace(".cubism.", f".{core_provider}."),
+        encoding="utf-8",
+    )
 
 
 def stage_addon(
     project_root: Path,
     addon_source: Path = DEFAULT_SOURCE,
     *,
+    core_provider: str = "cubism",
     write_extension_cache: bool = True,
 ) -> Path:
     project_root = project_root.resolve()
@@ -37,6 +51,7 @@ def stage_addon(
         shutil.rmtree(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(addon_source, destination)
+    select_core_provider(destination, core_provider)
 
     if write_extension_cache:
         extension_cache = project_root / ".godot/extension_list.cfg"
@@ -63,6 +78,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("projects", nargs="+", type=Path, help="Godot project roots")
     parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
+    parser.add_argument("--core-provider", choices=CORE_PROVIDERS, default="cubism")
     parser.add_argument("--no-extension-cache", action="store_true")
     args = parser.parse_args()
 
@@ -71,6 +87,7 @@ def main() -> int:
             stage_addon(
                 project,
                 args.source,
+                core_provider=args.core_provider,
                 write_extension_cache=not args.no_extension_cache,
             )
     except (FileNotFoundError, ValueError) as error:

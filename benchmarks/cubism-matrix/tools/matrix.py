@@ -76,10 +76,10 @@ def replace_tree(source: Path, destination: Path) -> None:
     shutil.copytree(source, destination)
 
 
-def select_release_extension_for_editor(
-    addon_root: Path, platform: str, arch: str
+def select_core_variant_for_editor(
+    addon_root: Path, core_provider: str, platform: str, arch: str
 ) -> None:
-    """Point the editor/debug key at the freshly built release library.
+    """Point the descriptor at one coexisting Core-specific release library.
 
     The benchmark runs through the Godot editor executable, which selects the
     debug GDExtension entry even when the native extension was built with
@@ -92,7 +92,7 @@ def select_release_extension_for_editor(
     debug_key = f"{platform}.debug{suffix}"
     release_key = f"{platform}.release{suffix}"
     lines = text.splitlines()
-    release_value = next(
+    default_release_value = next(
         (
             line.split("=", 1)[1].strip()
             for line in lines
@@ -100,16 +100,25 @@ def select_release_extension_for_editor(
         ),
         None,
     )
-    if release_value is None:
+    if default_release_value is None:
         raise ValueError(f"missing {release_key} in {descriptor}")
-    replaced = False
+    release_value = default_release_value.replace(
+        ".cubism.", f".{core_provider}."
+    )
+    library_path = addon_root / release_value.strip('"')
+    if not library_path.exists():
+        raise FileNotFoundError(
+            f"missing {core_provider} extension library: {library_path}"
+        )
+    replaced = set()
     for index, line in enumerate(lines):
-        if line.split("=", 1)[0].strip() == debug_key:
-            lines[index] = f"{debug_key} = {release_value}"
-            replaced = True
-            break
-    if not replaced:
-        raise ValueError(f"missing {debug_key} in {descriptor}")
+        key = line.split("=", 1)[0].strip()
+        if key in (debug_key, release_key):
+            lines[index] = f"{key} = {release_value}"
+            replaced.add(key)
+    missing = {debug_key, release_key} - replaced
+    if missing:
+        raise ValueError(f"missing {', '.join(sorted(missing))} in {descriptor}")
     descriptor.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -238,6 +247,7 @@ def build_godot(case_id: str, jobs: int, platform: str, arch: str) -> Path:
         )
     environment = os.environ.copy()
     environment["CUBISM_SDK_ROOT"] = str(SDK_ROOT)
+    environment["CUBISM_CORE_PROVIDER"] = case["core"]
     if case["core"] == "ayagami":
         environment["CUBISM_CORE_LIBRARY"] = str(build_ayagami_core())
     elif case["core"] == "purism":
@@ -256,7 +266,7 @@ def build_godot(case_id: str, jobs: int, platform: str, arch: str) -> Path:
     addon_source = extension_root / "addons/gd_cubism"
     artifact = BUILD_ROOT / case_id / "addons/gd_cubism"
     replace_tree(addon_source, artifact)
-    select_release_extension_for_editor(artifact, platform, arch)
+    select_core_variant_for_editor(artifact, case["core"], platform, arch)
     prepare_godot(artifact)
     return artifact
 

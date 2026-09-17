@@ -85,6 +85,18 @@ library. It then stages that addon plus the local Mao fixture into this isolated
 project. This rewrite is required because the Godot editor executable normally
 selects the debug entry even when benchmarking a `template_release` extension.
 
+Each Core provider has a stable filename in the canonical addon `bin/`
+directory, so builds coexist and remain available for incremental reuse:
+
+```text
+libgd_cubism.cubism.<platform>.<profile>...
+libgd_cubism.ayagami.<platform>.<profile>...
+libgd_cubism.purism.<platform>.<profile>...
+```
+
+Building one provider no longer overwrites either of the other two. The
+case-specific descriptor only selects the matching existing binary.
+
 ```sh
 python3 benchmarks/cubism-matrix/tools/matrix.py build-godot cubism-godot
 python3 benchmarks/cubism-matrix/tools/matrix.py run cubism-godot

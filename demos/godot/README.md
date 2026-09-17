@@ -39,22 +39,21 @@ the monorepo root:
 
 The optional `cubism-core-abi` feature in `modules/ayagami` exposes Ayagami
 through the Cubism Core C ABI expected by the native framework. Run its complete
-build/copy/test/restore cycle from the monorepo root:
+build/stage/test cycle from the monorepo root:
 
 ```sh
 tools/run_cubism_core_experiment.sh
 ```
 
-To launch the interactive demo with the Ayagami ABI provider installed
-temporarily:
+To launch the interactive demo with the Ayagami ABI provider selected:
 
 ```sh
 tools/run_cubism_core_demo.sh
 ```
 
-Both scripts restore any pre-existing extension binaries when they exit. See
-`modules/ayagami/CUBISM_CORE_ABI.md` for the manual build and compatibility
-details.
+Provider-specific extension binaries remain together in the canonical addon's
+`bin/` directory and are reused by later runs. See
+`modules/ayagami/CUBISM_CORE_ABI.md` for manual build and compatibility details.
 
 ## Rebuild the `gd_cubism` addon
 
@@ -64,6 +63,11 @@ cd modules/gd-cubism
 cd ../..
 python3 tools/stage_godot_addon.py demos/godot
 ```
+
+Set `CUBISM_CORE_PROVIDER` together with `CUBISM_CORE_LIBRARY` when building an
+alternate provider. Select that existing binary while staging with
+`--core-provider ayagami` or `--core-provider purism`; the other provider
+binaries are left untouched.
 
 The extension currently targets the Godot 4.3 ABI and has been exercised with
 Godot 4.7.2 Mono on macOS arm64. Distribution remains subject to the licenses
@@ -76,4 +80,4 @@ of `gd_cubism`, the Cubism Native SDK, and the sample model.
 - `tests/` — smoke, ordering, mask, and render tests.
 
 Performance benchmarks are intentionally kept out of this interactive project.
-See `benchmarks/cubism-matrix/` for the four Core/runtime combinations.
+See `benchmarks/cubism-matrix/` for the six Core/runtime combinations.

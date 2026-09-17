@@ -213,6 +213,16 @@ else:
 # This is primarily used by the monorepo's Ayagami compatibility matrix in
 # benchmarks/cubism-matrix.
 core_library_override = os.environ.get("CUBISM_CORE_LIBRARY") or ARGUMENTS.get("CUBISM_CORE_LIBRARY")
+core_provider = os.environ.get("CUBISM_CORE_PROVIDER", "cubism")
+if core_provider not in ("cubism", "ayagami", "purism"):
+    print("*** core_provider must be cubism, ayagami, or purism ***")
+    sys.exit(1)
+if core_provider == "cubism" and core_library_override:
+    print("*** Set CUBISM_CORE_PROVIDER when overriding the Core library ***")
+    sys.exit(1)
+if core_provider != "cubism" and not core_library_override:
+    print("*** CUBISM_CORE_LIBRARY is required for {:s} ***".format(core_provider))
+    sys.exit(1)
 if core_library_override:
     core_library_override = str(Path(core_library_override).resolve())
     if not Path(core_library_override).is_file():
@@ -221,6 +231,7 @@ if core_library_override:
     env["LIBS"] = [lib for lib in env.get("LIBS", []) if str(lib) != "Live2DCubismCore"]
     env.Append(LIBS=[env.File(core_library_override)])
     print("      core library override = {:s}".format(core_library_override))
+print("               core provider = {:s}".format(core_provider))
 
 print("")
 
@@ -259,6 +270,7 @@ addon_path = Path(extension_path).parent
 
 # Find the project name from the gdextension file (e.g. example).
 project_name = Path(extension_path).stem
+variant_name = "{}.{}".format(project_name, core_provider)
 
 # TODO: Cache is disabled currently.
 # scons_cache_path = os.environ.get("SCONS_CACHE")
@@ -272,7 +284,7 @@ if env["platform"] == "macos":
     library = env.SharedLibrary(
         "{0}/bin/lib{1}.{2}.{3}.framework/{1}.{2}.{3}".format(
             addon_path,
-            project_name,
+            variant_name,
             env["platform"],
             debug_or_release,
         ),
@@ -282,7 +294,7 @@ else:
     library = env.SharedLibrary(
         "{}/bin/lib{}.{}.{}.{}{}".format(
             addon_path,
-            project_name,
+            variant_name,
             env["platform"],
             debug_or_release,
             env["arch"],
