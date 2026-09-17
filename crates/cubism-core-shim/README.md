@@ -20,13 +20,15 @@ cd crates/ayagami-godot
 rm -f addons/ayagami_godot/bin/libayagami_godot.macos.debug.framework/libayagami_godot.macos.debug
 CUBISM_CORE_LIBRARY=../../target/debug/libayagami_cubism_core.a \
   .venv/bin/scons platform=macos arch=arm64 target=template_debug -j8
+cd ../..
+python3 tools/stage_godot_addon.py demos/godot
 ```
 
 For the complete build/copy/test/restore cycle, run
 `crates/cubism-core-shim/run_experiment.sh` from the repository root. It
 temporarily installs the alternate extension into the demo,
-runs the ABI-specific and ordinary ayagami-godot smoke tests, and restores both
-pre-existing binaries even if a command fails.
+runs the ABI-specific and ordinary ayagami-godot smoke tests, and restores the
+canonical addon and any pre-existing extension binary even if a command fails.
 
 To inspect the interactive ayagami-godot demo while it is backed by Ayagami, run
 `./run_demo.sh`. The alternate extension remains installed while the Godot

@@ -10,7 +10,7 @@ this repository. Place them at these paths from the monorepo root:
 
 ```text
 demos/godot/assets/live2d/mao/
-crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/
+third_party/CubismSdkForNative-5-r.5/
 ```
 
 Initialize `godot-cpp` and prepare SCons once:
@@ -59,8 +59,7 @@ Both scripts restore any pre-existing extension binaries when they exit.
 cd crates/ayagami-godot
 .venv/bin/scons platform=macos arch=arm64 target=template_debug -j8
 cd ../..
-rsync -a --delete crates/ayagami-godot/addons/ayagami_godot/ \
-  demos/godot/addons/ayagami_godot/
+python3 tools/stage_godot_addon.py demos/godot
 ```
 
 The extension currently targets the Godot 4.3 ABI and has been exercised with

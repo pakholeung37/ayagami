@@ -15,9 +15,15 @@ import sys
 
 MATRIX_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = MATRIX_ROOT.parents[1]
+sys.path.insert(0, str(REPO_ROOT / "tools"))
+
+from stage_godot_addon import stage_addon
+
+
 MATRIX_PATH = MATRIX_ROOT / "config" / "matrix.json"
 WORKLOAD_PATH = MATRIX_ROOT / "config" / "mao-20.json"
 BUILD_ROOT = REPO_ROOT / "target/cubism-matrix/build"
+SDK_ROOT = REPO_ROOT / "third_party/CubismSdkForNative-5-r.5"
 
 
 def read_json(path: Path) -> dict:
@@ -77,14 +83,8 @@ def prepare_model(model_source: Path | None = None) -> Path:
 
 def prepare_godot(addon_source: Path | None = None, model_source: Path | None = None) -> None:
     addon_source = addon_source or REPO_ROOT / "crates/ayagami-godot/addons/ayagami_godot"
-    replace_tree(addon_source, MATRIX_ROOT / "addons/ayagami_godot")
+    stage_addon(MATRIX_ROOT, addon_source)
     prepare_model(model_source)
-    extension_cache = MATRIX_ROOT / ".godot/extension_list.cfg"
-    extension_cache.parent.mkdir(parents=True, exist_ok=True)
-    extension_cache.write_text(
-        "res://addons/ayagami_godot/ayagami_godot.gdextension\n",
-        encoding="utf-8",
-    )
     print(f"prepared isolated Godot project at {MATRIX_ROOT}")
 
 
@@ -118,10 +118,7 @@ def build_native(case_id: str, jobs: int) -> Path:
     case, workload = find_case(case_id)
     if case["host"] != "cubism-framework-native":
         raise ValueError(f"{case_id} is not a Native case")
-    third_party = (
-        REPO_ROOT
-        / "crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/Samples/OpenGL/thirdParty"
-    )
+    third_party = SDK_ROOT / "Samples/OpenGL/thirdParty"
     missing = [path for path in (third_party / "glew/build/cmake", third_party / "glfw") if not path.is_dir()]
     if missing:
         setup = third_party / "scripts/setup_glew_glfw"
@@ -140,6 +137,7 @@ def build_native(case_id: str, jobs: int) -> Path:
         "-DCMAKE_BUILD_TYPE=Release",
         "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
         "-DCSM_MINIMUM_DEMO=OFF",
+        f"-DSDK_ROOT_PATH={SDK_ROOT}",
         f"-DCORE_PROVIDER={case['core']}",
         f"-DBENCHMARK_CASE_ID={case_id}",
         *cmake_workload_arguments(workload, model_hash),
@@ -161,6 +159,7 @@ def build_godot(case_id: str, jobs: int, platform: str, arch: str) -> Path:
     if not scons.is_file():
         raise FileNotFoundError(f"SCons environment does not exist: {scons}")
     environment = os.environ.copy()
+    environment["CUBISM_SDK_ROOT"] = str(SDK_ROOT)
     if case["core"] == "ayagami":
         environment["CUBISM_CORE_LIBRARY"] = str(build_shim())
     else:
@@ -206,10 +205,10 @@ def validate(local: bool) -> None:
     print(f"configuration valid: {len(matrix['cases'])} cases, workload={workload['id']}")
     if local:
         required = [
-            REPO_ROOT / "crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5",
+            SDK_ROOT,
             REPO_ROOT / "demos/godot/assets/live2d/mao/runtime/mao_pro.model3.json",
-            REPO_ROOT / "crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/Samples/OpenGL/thirdParty/glew/build/cmake",
-            REPO_ROOT / "crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/Samples/OpenGL/thirdParty/glfw",
+            SDK_ROOT / "Samples/OpenGL/thirdParty/glew/build/cmake",
+            SDK_ROOT / "Samples/OpenGL/thirdParty/glfw",
         ]
         missing = [path for path in required if not path.exists()]
         if missing:

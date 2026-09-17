@@ -33,7 +33,7 @@ share one scene and script.
 The proprietary SDK and Mao model are not tracked. Put them at:
 
 ```text
-crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/
+third_party/CubismSdkForNative-5-r.5/
 demos/godot/assets/live2d/mao/
 ```
 
@@ -47,7 +47,7 @@ python3 benchmarks/cubism-matrix/tools/matrix.py validate --local
 For Native OpenGL builds, prepare the SDK's vendored GLEW and GLFW once:
 
 ```sh
-cd crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/Samples/OpenGL/thirdParty/scripts
+cd third_party/CubismSdkForNative-5-r.5/Samples/OpenGL/thirdParty/scripts
 ./setup_glew_glfw
 ```
 

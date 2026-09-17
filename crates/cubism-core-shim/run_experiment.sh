@@ -7,26 +7,26 @@ demo_dir=${repo_dir}/demos/godot
 ayagami_godot_dir=${repo_dir}/crates/ayagami-godot
 godot_bin=${GODOT_BIN:-/Applications/Godot_mono.app/Contents/MacOS/Godot}
 shim_archive=${repo_dir}/target/debug/libayagami_cubism_core.a
-gd_binary_rel=addons/ayagami_godot/bin/libayagami_godot.macos.debug.framework/libayagami_godot.macos.debug
-demo_binary=${demo_dir}/addons/ayagami_godot/bin/libayagami_godot.macos.debug.framework/libayagami_godot.macos.debug
+stage_tool=${repo_dir}/tools/stage_godot_addon.py
+binary_rel=addons/ayagami_godot/bin/libayagami_godot.macos.debug.framework/libayagami_godot.macos.debug
+source_binary=${ayagami_godot_dir}/${binary_rel}
 temporary_dir=$(mktemp -d /tmp/ayagami-cubism-core.XXXXXX)
+had_source_binary=0
 
-restore_binaries() {
-  if [[ -f ${temporary_dir}/ayagami_godot ]]; then
-    cp ${temporary_dir}/ayagami_godot ${ayagami_godot_dir}/${gd_binary_rel}
+restore_addon() {
+  if (( had_source_binary )); then
+    cp ${temporary_dir}/ayagami_godot ${source_binary}
+  else
+    rm -f ${source_binary}
   fi
-  if [[ -f ${temporary_dir}/demo ]]; then
-    cp ${temporary_dir}/demo ${demo_binary}
-  fi
+  python3 ${stage_tool} ${demo_dir}
   rm -rf ${temporary_dir}
 }
-trap restore_binaries EXIT
+trap restore_addon EXIT
 
-if [[ -f ${ayagami_godot_dir}/${gd_binary_rel} ]]; then
-  cp ${ayagami_godot_dir}/${gd_binary_rel} ${temporary_dir}/ayagami_godot
-fi
-if [[ -f ${demo_binary} ]]; then
-  cp ${demo_binary} ${temporary_dir}/demo
+if [[ -f ${source_binary} ]]; then
+  cp ${source_binary} ${temporary_dir}/ayagami_godot
+  had_source_binary=1
 fi
 
 cd ${repo_dir}
@@ -34,10 +34,10 @@ cargo test -p ayagami-cubism-core
 cargo build -p ayagami-cubism-core
 
 cd ${ayagami_godot_dir}
-rm -f ${ayagami_godot_dir}/${gd_binary_rel}
+rm -f ${source_binary}
 CUBISM_CORE_LIBRARY=${shim_archive} \
   .venv/bin/scons platform=macos arch=arm64 target=template_debug -j8
-cp ${ayagami_godot_dir}/${gd_binary_rel} ${demo_binary}
+python3 ${stage_tool} ${demo_dir}
 
 # A fresh Godot checkout has no extension/class cache yet. Populate it before
 # asking Godot to parse test scripts that refer to native extension classes.

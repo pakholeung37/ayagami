@@ -12,6 +12,8 @@
   `crates/ayagami`.
 - `demos/godot/` — interactive Godot comparison and regression demo.
 - `benchmarks/cubism-matrix/` — reproducible 2x2 Core/runtime benchmark matrix.
+- `third_party/` — local, untracked third-party SDKs shared by crates and apps.
+- `tools/` — repository-wide development and staging utilities.
 
 The Rust projects share the root Cargo workspace and lockfile. Run all Rust
 checks from the repository root:
@@ -28,10 +30,11 @@ git submodule update --init --recursive
 ```
 
 The proprietary Cubism Native SDK and the demo model are deliberately not
-tracked. Put the SDK under `crates/ayagami-godot/thirdparty/` and the model under
-`demos/godot/assets/live2d/`. The benchmark preparation tool copies that local
-fixture into its isolated Godot project. See the demo, benchmark, and shim
-READMEs for build and test commands.
+tracked. Put the SDK under `third_party/CubismSdkForNative-5-r.5/` and the model
+under `demos/godot/assets/live2d/`. The canonical Godot addon lives under
+`crates/ayagami-godot/addons/`; `tools/stage_godot_addon.py` stages it into the
+demo and benchmark projects. See the demo, benchmark, and shim READMEs for build
+and test commands.
 
 ## Imported sources
 

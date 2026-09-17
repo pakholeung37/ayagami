@@ -5,7 +5,7 @@ set(APP_NAME Demo)
 # Set directory paths.
 set(
   SDK_ROOT_PATH
-  "${CMAKE_CURRENT_LIST_DIR}/../../../../crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../third_party/CubismSdkForNative-5-r.5"
   CACHE PATH
   "Cubism Native SDK root"
 )

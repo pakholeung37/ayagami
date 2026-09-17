@@ -14,10 +14,22 @@ print("")
 
 
 # ------------------------------------------------------ get CubismSdkForNative
-def get_cubism_sdk(dirname):
-    list_path: list[Path] = [
-        o_path for o_path in Path("thirdparty").glob(dirname) if o_path.is_dir()
-    ]
+def get_cubism_sdk():
+    configured_root = ARGUMENTS.get("CUBISM_SDK_ROOT") or os.environ.get(
+        "CUBISM_SDK_ROOT"
+    )
+    if configured_root:
+        list_path = [Path(configured_root).expanduser().resolve()]
+    else:
+        list_path = [
+            sdk_path.resolve()
+            for sdk_path in Path("../../third_party").glob("CubismSdkForNative*")
+            if sdk_path.is_dir()
+        ]
+
+    if not list_path:
+        print("*** Cubism SDK not found; set CUBISM_SDK_ROOT ***")
+        sys.exit(1)
 
     o_path = max(list_path)
 
@@ -44,12 +56,15 @@ def get_cubism_sdk(dirname):
     sys.exit(1)
 
 
-CUBISM_NATIVE_CORE_DIR, CUBISM_NATIVE_FRAMEWORK_DIR = get_cubism_sdk(
-    "CubismSdkForNative*"
-)
+CUBISM_NATIVE_CORE_DIR, CUBISM_NATIVE_FRAMEWORK_DIR = get_cubism_sdk()
 
 # ------------------------------------------------------- check for experimenal
-CHECK_PATH = "thirdparty/CubismNativeFramework"
+CHECK_PATH = str(
+    Path(
+        ARGUMENTS.get("CUBISM_FRAMEWORK_ROOT")
+        or os.environ.get("CUBISM_FRAMEWORK_ROOT", "../../third_party/CubismNativeFramework")
+    ).expanduser().resolve()
+)
 if os.path.isdir(CHECK_PATH) is True:
     print("*** You are using a custom native framework that you prepared yourself. ***")
     CHECK_FILE = os.path.join(CHECK_PATH, "src", "Motion", "ACubismMotion.hpp")
