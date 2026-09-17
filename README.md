@@ -5,12 +5,8 @@ rendering real-time 2D puppet models.
 
 ## Acknowledgements
 
-This project builds on the work of three upstream open-source projects:
+This project builds on the work of upstream open-source projects:
 
-- [Ayagami](https://github.com/AyagamiDev/ayagami), which provides the original
-  Rust model parser, deformation runtime, renderer, and demo. Copyright remains
-  with the Ayagami Project Contributors; this repository uses that work under
-  its MIT license option.
 - [GDCubism](https://github.com/MizunagiKB/gd_cubism) by MizunagiKB, which
   provides the foundation of the Godot integration. GDCubism-derived portions
   remain Copyright (c) 2023 MizunagiKB and are used under the MIT License.

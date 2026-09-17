@@ -4,16 +4,6 @@ The repository-level MIT License applies only where a file, directory,
 dependency, or submodule does not carry a different notice. The following
 upstream works retain their original copyrights and license terms.
 
-## Ayagami
-
-Portions of `modules/ayagami`, `modules/ayagami-render`, and
-`demos/ayagami-demo` are derived from
-[Ayagami](https://github.com/AyagamiDev/ayagami).
-
-Copyright (c) The Ayagami Project Contributors.
-
-The upstream project offers this code under the MIT License or Apache License
-2.0. This repository uses it under the MIT License option.
 
 ## GDCubism
 
@@ -57,9 +47,3 @@ remain subject to the applicable
 
 Live2D and Cubism are used only to describe interoperability. This project is
 not affiliated with, authorized by, endorsed by, or sponsored by Live2D Inc.
-
-## learn-wgpu
-
-`modules/ayagami-render/examples/demo_renderer.rs` contains code based on the
-[learn-wgpu](https://github.com/sotrh/learn-wgpu) tutorial and retains its MIT
-license notice in the source file.

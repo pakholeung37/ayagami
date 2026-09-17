@@ -1,19 +1,16 @@
 # Cubism compatibility and performance matrix
 
-This project uses 40 independent instances of Nijiiro Mao to compare three
+This project uses 40 independent instances of Nijiiro Mao to compare two
 Cubism Core ABI providers across two rendering stacks and a Core-only runner. Compatibility must
 be established before performance numbers are treated as valid.
 
 | Case | Core provider | Host/rendering stack | Purpose |
 | --- | --- | --- | --- |
 | `cubism-native` | Official Cubism Core | Cubism Framework Native | Baseline |
-| `ayagami-native` | Ayagami Core ABI | Cubism Framework Native | Isolate Ayagami Core |
 | `purism-native` | Purism Core v6 ABI | Cubism Framework Native | Isolate Purism Core |
 | `cubism-godot` | Official Cubism Core | gd_cubism | Isolate Godot integration |
-| `ayagami-godot` | Ayagami Core ABI | gd_cubism | Ayagami Core through the Godot stack |
 | `purism-godot` | Purism Core v6 ABI | gd_cubism | Purism Core with the Godot stack |
 | `cubism-core` | Official Cubism Core | Core-only | Pure computation baseline |
-| `ayagami-core` | Ayagami Core ABI | Core-only | Pure computation comparison |
 | `purism-core` | Purism Core v6 ABI | Core-only | Pure computation comparison |
 
 The Core implementation is selected at link time. The matrix therefore creates
@@ -23,7 +20,7 @@ share one scene and script.
 
 ## Layout
 
-- `config/matrix.json` defines the nine permitted combinations.
+- `config/matrix.json` defines the six permitted combinations.
 - `config/mao-40.json` is the shared workload definition. Its 10x4 grid keeps
   each model near the previous on-screen size while doubling update/render load.
 - `runners/native/` is the Cubism Framework OpenGL runner.
@@ -78,9 +75,6 @@ Godot.
 python3 benchmarks/cubism-matrix/tools/matrix.py build-native cubism-native
 python3 benchmarks/cubism-matrix/tools/matrix.py run cubism-native
 
-python3 benchmarks/cubism-matrix/tools/matrix.py build-native ayagami-native
-python3 benchmarks/cubism-matrix/tools/matrix.py run ayagami-native
-
 python3 benchmarks/cubism-matrix/tools/matrix.py build-native purism-native
 python3 benchmarks/cubism-matrix/tools/matrix.py run purism-native
 ```
@@ -99,14 +93,11 @@ in-place buffers. The 750 ms steady-state phases are the primary comparison.
 python3 benchmarks/cubism-matrix/tools/matrix.py build-core cubism-core
 python3 benchmarks/cubism-matrix/tools/matrix.py run cubism-core
 
-python3 benchmarks/cubism-matrix/tools/matrix.py build-core ayagami-core
-python3 benchmarks/cubism-matrix/tools/matrix.py run ayagami-core
-
 python3 benchmarks/cubism-matrix/tools/matrix.py build-core purism-core
 python3 benchmarks/cubism-matrix/tools/matrix.py run purism-core
 ```
 
-For a repeatable comparison, build all three providers, run them three times in
+For a repeatable comparison, build both providers, run them three times in
 alternating order, and write median data to
 `artifacts/results/latest-core-only.json`:
 
@@ -128,19 +119,15 @@ directory, so builds coexist and remain available for incremental reuse:
 
 ```text
 libgd_cubism.cubism.<platform>.<profile>...
-libgd_cubism.ayagami.<platform>.<profile>...
 libgd_cubism.purism.<platform>.<profile>...
 ```
 
-Building one provider no longer overwrites either of the other two. The
+Building one provider no longer overwrites the other. The
 case-specific descriptor only selects the matching existing binary.
 
 ```sh
 python3 benchmarks/cubism-matrix/tools/matrix.py build-godot cubism-godot
 python3 benchmarks/cubism-matrix/tools/matrix.py run cubism-godot
-
-python3 benchmarks/cubism-matrix/tools/matrix.py build-godot ayagami-godot
-python3 benchmarks/cubism-matrix/tools/matrix.py run ayagami-godot
 
 python3 benchmarks/cubism-matrix/tools/matrix.py build-godot purism-godot
 python3 benchmarks/cubism-matrix/tools/matrix.py run purism-godot

@@ -7,11 +7,6 @@
       "host": "cubism-framework-native"
     },
     {
-      "id": "ayagami-native",
-      "core": "ayagami",
-      "host": "cubism-framework-native"
-    },
-    {
       "id": "purism-native",
       "core": "purism",
       "host": "cubism-framework-native"
@@ -22,11 +17,6 @@
       "host": "gd-cubism"
     },
     {
-      "id": "ayagami-godot",
-      "core": "ayagami",
-      "host": "gd-cubism"
-    },
-    {
       "id": "purism-godot",
       "core": "purism",
       "host": "gd-cubism"
@@ -34,11 +24,6 @@
     {
       "id": "cubism-core",
       "core": "cubism",
-      "host": "core-only"
-    },
-    {
-      "id": "ayagami-core",
-      "core": "ayagami",
       "host": "core-only"
     },
     {

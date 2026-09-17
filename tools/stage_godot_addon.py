@@ -11,8 +11,7 @@ import shutil
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE = REPO_ROOT / "modules/gd-cubism/addons/gd_cubism"
 EXTENSION_RESOURCE = "res://addons/gd_cubism/gd_cubism.gdextension"
-LEGACY_ADDON_NAME = "ayagami_godot"
-CORE_PROVIDERS = ("cubism", "ayagami", "purism")
+CORE_PROVIDERS = ("cubism", "purism")
 PROJECT_PROVIDER_FILE = "gd_cubism_provider.txt"
 
 
@@ -47,11 +46,8 @@ def stage_addon(
         core_provider = provider_file.read_text(encoding="utf-8").strip()
 
     destination = project_root / "addons/gd_cubism"
-    legacy_destination = project_root / "addons" / LEGACY_ADDON_NAME
     if destination == addon_source:
         raise ValueError("addon source and staging destination must be different")
-    if legacy_destination.exists():
-        shutil.rmtree(legacy_destination)
     if destination.exists():
         shutil.rmtree(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -71,7 +67,6 @@ def stage_addon(
             line
             for line in existing
             if "addons/gd_cubism/" not in line
-            and f"addons/{LEGACY_ADDON_NAME}/" not in line
         ]
         entries.append(EXTENSION_RESOURCE)
         extension_cache.write_text("\n".join(entries) + "\n", encoding="utf-8")

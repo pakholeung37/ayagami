@@ -36,25 +36,24 @@ the monorepo root. This project selects Purism Core by default through
   --script res://tests/smoke_test.gd
 ```
 
-## Ayagami through the Cubism Core ABI
+## PurismCore through the Cubism Core ABI
 
-The optional `cubism-core-abi` feature in `modules/ayagami` exposes Ayagami
-through the Cubism Core C ABI expected by the native framework. Run its complete
-build/stage/test cycle from the monorepo root:
+`modules/purism-core` provides PurismCore through the Cubism Core C ABI expected
+by the native framework. Run its complete build/stage/test cycle from the
+monorepo root:
 
 ```sh
 tools/run_cubism_core_experiment.sh
 ```
 
-To launch the interactive demo with the Ayagami ABI provider selected:
+To launch the interactive demo with the PurismCore provider selected:
 
 ```sh
 tools/run_cubism_core_demo.sh
 ```
 
 Provider-specific extension binaries remain together in the canonical addon's
-`bin/` directory and are reused by later runs. See
-`modules/ayagami/CUBISM_CORE_ABI.md` for manual build and compatibility details.
+`bin/` directory and are reused by later runs.
 
 ## Rebuild the `gd_cubism` addon
 
@@ -67,7 +66,7 @@ python3 tools/stage_godot_addon.py demos/godot
 
 Set `CUBISM_CORE_PROVIDER` together with `CUBISM_CORE_LIBRARY` when building an
 alternate provider. Select that existing binary while staging with
-`--core-provider ayagami` or `--core-provider purism`; the other provider
+`--core-provider purism` or `--core-provider cubism`; the other provider
 binaries are left untouched.
 
 The extension currently targets the Godot 4.3 ABI and has been exercised with

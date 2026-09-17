@@ -28,7 +28,7 @@ window/stretch/mode="canvas_items"
 
 [dotnet]
 
-project/assembly_name="AyagamiGodotIntegrationDemo"
+project/assembly_name="KasaneGodotIntegrationDemo"
 
 [rendering]
 

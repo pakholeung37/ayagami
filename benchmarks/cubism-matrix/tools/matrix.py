@@ -39,7 +39,7 @@ def read_json(path: Path) -> dict:
 def load_configuration() -> tuple[dict, dict]:
     matrix = read_json(MATRIX_PATH)
     workload = read_json(WORKLOAD_PATH)
-    providers = {"cubism", "ayagami", "purism"}
+    providers = {"cubism", "purism"}
     hosts = {"cubism-framework-native", "gd-cubism", "core-only"}
     expected = {(provider, host) for provider in providers for host in hosts}
     cases = matrix.get("cases", [])
@@ -146,24 +146,6 @@ def prepare_godot(addon_source: Path | None = None, model_source: Path | None = 
     print(f"prepared isolated Godot project at {MATRIX_ROOT}")
 
 
-def build_ayagami_core() -> Path:
-    run(
-        [
-            "cargo",
-            "build",
-            "--release",
-            "--locked",
-            "-p",
-            "ayagami",
-            "--features",
-            "cubism-core-abi",
-        ]
-    )
-    archive = REPO_ROOT / "target/release/libayagami.a"
-    if not archive.is_file():
-        raise FileNotFoundError(f"Cargo did not produce {archive}")
-    return archive
-
 
 def build_purism_core(jobs: int) -> Path:
     if not (PURISM_ROOT / "CMakeLists.txt").is_file():
@@ -220,9 +202,7 @@ def build_native(case_id: str, jobs: int) -> Path:
             "Native OpenGL dependencies are not prepared; run:\n"
             f"cd {setup.parent} && ./setup_glew_glfw"
         )
-    if case["core"] == "ayagami":
-        build_ayagami_core()
-    elif case["core"] == "purism":
+    if case["core"] == "purism":
         build_purism_core(jobs)
     model_path = prepare_model()
     model_hash = hashlib.sha256(model_path.read_bytes()).hexdigest()
@@ -251,9 +231,7 @@ def build_core(case_id: str, jobs: int) -> Path:
     case, workload = find_case(case_id)
     if case["host"] != "core-only":
         raise ValueError(f"{case_id} is not a Core-only case")
-    if case["core"] == "ayagami":
-        build_ayagami_core()
-    elif case["core"] == "purism":
+    if case["core"] == "purism":
         build_purism_core(jobs)
     build_dir = BUILD_ROOT / case_id / "core"
     source_dir = MATRIX_ROOT / "runners/core"
@@ -262,7 +240,6 @@ def build_core(case_id: str, jobs: int) -> Path:
         "-DCMAKE_BUILD_TYPE=Release",
         f"-DSDK_ROOT_PATH={SDK_ROOT}",
         f"-DCORE_PROVIDER={case['core']}",
-        f"-DAYAGAMI_CORE_LIBRARY={REPO_ROOT / 'target/release/libayagami.a'}",
         f"-DPURISM_CORE_LIBRARY={PURISM_BUILD_ROOT / 'libPurismCore.a'}",
         f"-DBENCHMARK_CASE_ID={case_id}",
         f"-DBENCHMARK_MODEL_COUNT={workload['instances']}",
@@ -288,9 +265,7 @@ def build_godot(case_id: str, jobs: int, platform: str, arch: str) -> Path:
     environment = os.environ.copy()
     environment["CUBISM_SDK_ROOT"] = str(SDK_ROOT)
     environment["CUBISM_CORE_PROVIDER"] = case["core"]
-    if case["core"] == "ayagami":
-        environment["CUBISM_CORE_LIBRARY"] = str(build_ayagami_core())
-    elif case["core"] == "purism":
+    if case["core"] == "purism":
         environment["CUBISM_CORE_LIBRARY"] = str(build_purism_core(jobs))
     else:
         environment.pop("CUBISM_CORE_LIBRARY", None)
@@ -350,7 +325,7 @@ def parse_benchmark_result(output: str) -> dict:
 def benchmark_core(repeats: int, jobs: int) -> Path:
     if repeats < 1:
         raise ValueError("repeats must be at least 1")
-    case_ids = ["cubism-core", "ayagami-core", "purism-core"]
+    case_ids = ["cubism-core", "purism-core"]
     executables = {case_id: build_core(case_id, jobs) for case_id in case_ids}
     moc = REPO_ROOT / "demos/godot/assets/live2d/mao/runtime/mao_pro.moc3"
     trials: dict[str, list[dict]] = {case_id: [] for case_id in case_ids}

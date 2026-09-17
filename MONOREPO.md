@@ -2,44 +2,36 @@
 
 ## Layout
 
-- `modules/ayagami/` — model parser, deformation runtime, and optional Cubism
-  Core C ABI provider (`cubism-core-abi`).
-- `modules/ayagami-render/` — reference `wgpu` renderer.
 - `modules/purism-core/` — forked PurismCore provider, pinned as a Git
   submodule.
-- `demos/ayagami-demo/` — native and web demo built with `egui`.
 - `modules/gd-cubism/` — `gd_cubism` Godot GDExtension, imported from
   `gd_cubism` and adapted to support an alternate Cubism Core implementation.
 - `demos/godot/` — interactive Godot comparison and regression demo.
-- `benchmarks/cubism-matrix/` — reproducible 3x2 Core/runtime benchmark matrix.
+- `benchmarks/cubism-matrix/` — reproducible benchmark matrix between official
+  Cubism Core and PurismCore.
 - `third_party/` — local, untracked third-party SDKs shared by modules and apps.
 - `tools/` — repository-wide development and staging utilities.
 
-The Rust projects share the root Cargo workspace and committed lockfile. Run
-the full Rust checks from the repository root:
-
-```sh
-cargo fmt --all -- --check
-cargo test --workspace --all-targets --all-features --locked
-cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
-```
-
-Small command-line utilities live as crate examples rather than library
-binaries:
-
-```sh
-cargo run --locked -p ayagami --example load_model -- path/to/model.moc3
-cargo run --locked -p ayagami-render --example demo_renderer -- \
-  path/to/model.moc3 path/to/texture.png
-```
-
-Build the browser demo with `tools/build_web_demo.sh --release`.
-
-The Godot extension keeps `godot-cpp` as a submodule. Initialize it after
-cloning:
+Initialize submodules after cloning:
 
 ```sh
 git submodule update --init --recursive
+```
+
+PurismCore uses CMake and CTest:
+
+```sh
+cmake -S modules/purism-core -B target/cubism-matrix/core/purism-v6 \
+  -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DPURISM_CORE_ABI=v6 \
+  -DPURISM_CORE_BUILD_TESTS=ON
+cmake --build target/cubism-matrix/core/purism-v6 -j8
+ctest --test-dir target/cubism-matrix/core/purism-v6 --output-on-failure
+```
+
+Build and test the Godot integration with PurismCore:
+
+```sh
+tools/run_cubism_core_experiment.sh
 ```
 
 The proprietary Cubism Native SDK and the demo model are deliberately not

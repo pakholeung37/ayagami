@@ -210,12 +210,12 @@ else:
 
 # Experimental Core ABI replacements can provide a static archive without
 # changing the SDK headers or the open-source Cubism Native Framework sources.
-# This is primarily used by the monorepo's Ayagami compatibility matrix in
+# This is primarily used by the monorepo's PurismCore compatibility matrix in
 # benchmarks/cubism-matrix.
 core_library_override = os.environ.get("CUBISM_CORE_LIBRARY") or ARGUMENTS.get("CUBISM_CORE_LIBRARY")
 core_provider = os.environ.get("CUBISM_CORE_PROVIDER", "cubism")
-if core_provider not in ("cubism", "ayagami", "purism"):
-    print("*** core_provider must be cubism, ayagami, or purism ***")
+if core_provider not in ("cubism", "purism"):
+    print("*** core_provider must be cubism or purism ***")
     sys.exit(1)
 if core_provider == "cubism" and core_library_override:
     print("*** Set CUBISM_CORE_PROVIDER when overriding the Core library ***")
