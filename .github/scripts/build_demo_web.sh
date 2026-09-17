@@ -3,7 +3,7 @@ set -eu
 script_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$script_path/../.."
 
-CRATE_NAME=ayagami-demo
+CRATE_NAME=apps/ayagami-demo
 
 OPTIMIZE=false
 BUILD=debug

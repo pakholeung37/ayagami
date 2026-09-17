@@ -5,7 +5,7 @@ target
 
 # Local-only dependencies and test fixtures. Their licenses do not permit them
 # to be redistributed with this repository.
-ayagami-godot/thirdparty/CubismNativeFramework/
-ayagami-godot/thirdparty/CubismSdkForNative*/
+crates/ayagami-godot/thirdparty/CubismNativeFramework/
+crates/ayagami-godot/thirdparty/CubismSdkForNative*/
 experiments/godot-demo/assets/live2d/
 experiments/godot-demo/artifacts/

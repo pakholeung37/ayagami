@@ -16,15 +16,15 @@ this repository. Place them at these paths from the monorepo root:
 
 ```text
 experiments/godot-demo/assets/live2d/mao/
-ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/
+crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/
 ```
 
 Initialize `godot-cpp` and prepare SCons once:
 
 ```sh
 git submodule update --init --recursive
-python3 -m venv ayagami-godot/.venv
-ayagami-godot/.venv/bin/python -m pip install scons==4.7.0
+python3 -m venv crates/ayagami-godot/.venv
+crates/ayagami-godot/.venv/bin/python -m pip install scons==4.7.0
 ```
 
 ## Run
@@ -74,10 +74,10 @@ Both scripts restore any pre-existing extension binaries when they exit.
 ## Rebuild the `ayagami-godot` addon
 
 ```sh
-cd ayagami-godot
+cd crates/ayagami-godot
 .venv/bin/scons platform=macos arch=arm64 target=template_debug -j8
-cd ..
-rsync -a --delete ayagami-godot/demo/addons/gd_cubism/ \
+cd ../..
+rsync -a --delete crates/ayagami-godot/demo/addons/gd_cubism/ \
   experiments/godot-demo/addons/gd_cubism/
 ```
 

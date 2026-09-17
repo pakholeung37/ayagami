@@ -15,7 +15,7 @@ Build the shim and the alternate GDExtension from the monorepo:
 cd /path/to/ayagami
 cargo build -p ayagami-cubism-core
 
-cd ayagami-godot
+cd crates/ayagami-godot
 rm -f demo/addons/gd_cubism/bin/libgd_cubism.macos.debug.framework/libgd_cubism.macos.debug
 CUBISM_CORE_LIBRARY=../target/debug/libayagami_cubism_core.a \
   .venv/bin/scons platform=macos arch=arm64 target=template_debug -j8

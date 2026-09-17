@@ -40,11 +40,11 @@ point other than the default 20.
 ## Build and run the Native benchmark
 
 The CMake project expects the SDK at
-`ayagami-godot/thirdparty/CubismSdkForNative-5-r.5` and copies the Mao model
+`crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5` and copies the Mao model
 from this Godot project into the build output.
 
 ```bash
-cd ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/Samples/OpenGL/thirdParty/scripts
+cd crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/Samples/OpenGL/thirdParty/scripts
 ./setup_glew_glfw
 
 cd experiments/godot-demo/benchmarks/native_cubism_20

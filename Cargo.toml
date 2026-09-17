@@ -1,9 +1,9 @@
 [workspace]
 resolver = "3"
 members = [
-    "ayagami",
-    "ayagami-demo",
-    "ayagami-render",
+    "crates/ayagami",
+    "crates/ayagami-render",
+    "apps/ayagami-demo",
     "experiments/cubism-core-shim",
 ]
 
