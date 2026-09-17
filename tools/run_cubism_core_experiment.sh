@@ -30,8 +30,8 @@ if [[ -f ${source_binary} ]]; then
 fi
 
 cd ${repo_dir}
-cargo test -p ayagami --features cubism-core-abi
-cargo build -p ayagami --features cubism-core-abi
+cargo test --locked -p ayagami --features cubism-core-abi
+cargo build --locked -p ayagami --features cubism-core-abi
 
 cd ${ayagami_godot_dir}
 rm -f ${source_binary}

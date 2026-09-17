@@ -1,4 +1,4 @@
-// Based on learn-wgpu tutorial5
+// Minimal renderer example based on learn-wgpu tutorial5.
 //
 // https://github.com/sotrh/learn-wgpu/tree/master/code/beginner/tutorial5-textures
 // License: MIT

@@ -94,6 +94,7 @@ def build_ayagami_core() -> Path:
             "cargo",
             "build",
             "--release",
+            "--locked",
             "-p",
             "ayagami",
             "--features",

@@ -8,7 +8,3 @@
 *.obj
 *.exp
 *.lib
-
-# Local SDK/framework checkouts
-thirdparty/CubismNativeFramework
-thirdparty/CubismSdkForNative*

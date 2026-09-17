@@ -1,4 +1,4 @@
 [submodule "crates/ayagami-godot/godot-cpp"]
 	path = crates/ayagami-godot/godot-cpp
 	url = https://github.com/godotengine/godot-cpp
-	branch = 4.1
+	branch = 4.3

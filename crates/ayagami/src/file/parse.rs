@@ -434,7 +434,7 @@ impl ParsedModel {
                 &self.art_mesh.i_forms,
                 &self.art_mesh.cnt_forms,
                 "ArtMesh.forms",
-                &self,
+                self,
             )?;
             for i in 0..self.art_mesh.raw_count {
                 let form = self.art_mesh.i_forms[i].0;
@@ -450,7 +450,7 @@ impl ParsedModel {
                 &self.rot_deformer.i_forms,
                 &self.rot_deformer.cnt_forms,
                 "RotDeformer.forms",
-                &self,
+                self,
             )?;
             for i in 0..self.rot_deformer.raw_count {
                 let form = self.rot_deformer.i_forms[i].0;
@@ -464,7 +464,7 @@ impl ParsedModel {
                 &self.warp_deformer.i_forms,
                 &self.warp_deformer.cnt_forms,
                 "WarpDeformer.forms",
-                &self,
+                self,
             )?;
             for i in 0..self.warp_deformer.raw_count {
                 let form = self.warp_deformer.i_forms[i].0;

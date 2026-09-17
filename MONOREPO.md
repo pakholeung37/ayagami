@@ -13,12 +13,25 @@
 - `third_party/` — local, untracked third-party SDKs shared by crates and apps.
 - `tools/` — repository-wide development and staging utilities.
 
-The Rust projects share the root Cargo workspace and lockfile. Run all Rust
-checks from the repository root:
+The Rust projects share the root Cargo workspace and committed lockfile. Run
+the full Rust checks from the repository root:
 
 ```sh
-cargo test --workspace
+cargo fmt --all -- --check
+cargo test --workspace --all-targets --all-features --locked
+cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
 ```
+
+Small command-line utilities live as crate examples rather than library
+binaries:
+
+```sh
+cargo run --locked -p ayagami --example load_model -- path/to/model.moc3
+cargo run --locked -p ayagami-render --example demo_renderer -- \
+  path/to/model.moc3 path/to/texture.png
+```
+
+Build the browser demo with `tools/build_web_demo.sh --release`.
 
 The Godot extension keeps `godot-cpp` as a submodule. Initialize it after
 cloning:

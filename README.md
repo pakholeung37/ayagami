@@ -31,7 +31,9 @@ Original code and modifications in this repository are available under the
 submodule carries a different notice. Existing third-party copyright and
 license notices remain in force. In particular, the `godot-cpp` submodule and
 Live2D-derived benchmark sources are governed by their respective licenses;
-the repository MIT License does not relicense them.
+the repository MIT License does not relicense them. See
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the applicable scopes and
+notices.
 
 Live2D, Cubism, the Live2D Cubism SDK, Cubism Core, Cubism Native Framework,
 and associated sample data are owned by or licensed through Live2D Inc. and/or

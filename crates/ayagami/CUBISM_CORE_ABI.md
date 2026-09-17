@@ -14,7 +14,7 @@ Build the ABI provider and the alternate GDExtension from the monorepo:
 
 ```sh
 cd /path/to/ayagami
-cargo build -p ayagami --features cubism-core-abi
+cargo build --locked -p ayagami --features cubism-core-abi
 
 cd crates/ayagami-godot
 rm -f addons/ayagami_godot/bin/libayagami_godot.macos.debug.framework/libayagami_godot.macos.debug
