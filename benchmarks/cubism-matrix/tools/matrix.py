@@ -76,13 +76,13 @@ def prepare_model(model_source: Path | None = None) -> Path:
 
 
 def prepare_godot(addon_source: Path | None = None, model_source: Path | None = None) -> None:
-    addon_source = addon_source or REPO_ROOT / "crates/ayagami-godot/demo/addons/gd_cubism"
-    replace_tree(addon_source, MATRIX_ROOT / "addons/gd_cubism")
+    addon_source = addon_source or REPO_ROOT / "crates/ayagami-godot/addons/ayagami_godot"
+    replace_tree(addon_source, MATRIX_ROOT / "addons/ayagami_godot")
     prepare_model(model_source)
     extension_cache = MATRIX_ROOT / ".godot/extension_list.cfg"
     extension_cache.parent.mkdir(parents=True, exist_ok=True)
     extension_cache.write_text(
-        "res://addons/gd_cubism/gd_cubism.gdextension\n",
+        "res://addons/ayagami_godot/ayagami_godot.gdextension\n",
         encoding="utf-8",
     )
     print(f"prepared isolated Godot project at {MATRIX_ROOT}")
@@ -173,8 +173,8 @@ def build_godot(case_id: str, jobs: int, platform: str, arch: str) -> Path:
         cwd=extension_root,
         env=environment,
     )
-    addon_source = extension_root / "demo/addons/gd_cubism"
-    artifact = BUILD_ROOT / case_id / "addons/gd_cubism"
+    addon_source = extension_root / "addons/ayagami_godot"
+    artifact = BUILD_ROOT / case_id / "addons/ayagami_godot"
     replace_tree(addon_source, artifact)
     prepare_godot(artifact)
     return artifact
@@ -188,7 +188,7 @@ def run_case(case_id: str, godot_bin: str) -> None:
             raise FileNotFoundError(f"build {case_id} before running it")
         run([str(executable)], cwd=executable.parent)
         return
-    addon_artifact = BUILD_ROOT / case_id / "addons/gd_cubism"
+    addon_artifact = BUILD_ROOT / case_id / "addons/ayagami_godot"
     if not addon_artifact.is_dir():
         raise FileNotFoundError(f"build {case_id} before running it")
     prepare_godot(addon_artifact)

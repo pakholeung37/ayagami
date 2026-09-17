@@ -39,7 +39,7 @@ offset_right = 520.0
 offset_bottom = 82.0
 theme_override_colors/font_color = Color(0.54, 0.64, 0.78, 1)
 theme_override_font_sizes/font_size = 14
-text = "Godot 4 + gd_cubism + Cubism SDK for Native"
+text = "Godot 4 + ayagami-godot + Cubism SDK for Native"
 
 [node name="Panel" type="PanelContainer" parent="UI"]
 anchors_preset = 6

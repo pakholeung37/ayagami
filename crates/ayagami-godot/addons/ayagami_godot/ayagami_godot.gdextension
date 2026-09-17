@@ -1,0 +1,25 @@
+[configuration]
+
+entry_symbol = "ayagami_godot_library_init"
+compatibility_minimum = 4.3
+
+[libraries]
+
+macos.debug = "bin/libayagami_godot.macos.debug.framework"
+macos.release = "bin/libayagami_godot.macos.release.framework"
+windows.debug.x86_64 = "bin/libayagami_godot.windows.debug.x86_64.dll"
+windows.release.x86_64 = "bin/libayagami_godot.windows.release.x86_64.dll"
+linux.debug.x86_64 = "bin/libayagami_godot.linux.debug.x86_64.so"
+linux.release.x86_64 = "bin/libayagami_godot.linux.release.x86_64.so"
+# linux.debug.arm64 = "bin/libayagami_godot.linux.debug.arm64.so"
+# linux.release.arm64 = "bin/libayagami_godot.linux.release.arm64.so"
+# linux.debug.rv64 = "bin/libayagami_godot.linux.debug.rv64.so"
+# linux.release.rv64 = "bin/libayagami_godot.linux.release.rv64.so"
+ios.debug.arm64 = "bin/libayagami_godot.ios.debug.arm64.dylib"
+ios.release.arm64 = "bin/libayagami_godot.ios.release.arm64.dylib"
+ios.debug.universal = "bin/libayagami_godot.ios.debug.universal.dylib"
+ios.release.universal = "bin/libayagami_godot.ios.release.universal.dylib"
+android.debug.arm32 = "bin/libayagami_godot.android.debug.arm32.so"
+android.release.arm32 = "bin/libayagami_godot.android.release.arm32.so"
+android.debug.arm64 = "bin/libayagami_godot.android.debug.arm64.so"
+android.release.arm64 = "bin/libayagami_godot.android.release.arm64.so"

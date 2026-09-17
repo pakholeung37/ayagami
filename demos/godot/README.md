@@ -1,13 +1,7 @@
-# Ayagami Godot integration demos
+# Ayagami Godot integration demo
 
-A minimal end-to-end Godot 4 demo with two runtime paths:
-
-- `main.tscn` uses the `ayagami-godot` GDExtension and Cubism Native
-  Framework.
-- `ayagami_demo.tscn` uses the separate Rust-based Ayagami GDExtension.
-
-Both scenes use the same local Nijiiro Mao sample model, allowing their meshes
-and rendered output to be compared.
+A minimal end-to-end Godot 4 demo using the `ayagami-godot` GDExtension and
+Cubism Native Framework with the local Nijiiro Mao sample model.
 
 ## Local prerequisites
 
@@ -29,28 +23,16 @@ crates/ayagami-godot/.venv/bin/python -m pip install scons==4.7.0
 
 ## Run
 
-Open `demos/godot/project.godot` with Godot 4.7 or newer, or launch
-either scene from the monorepo root:
+Open `demos/godot/project.godot` with Godot 4.7 or newer, or launch it from
+the monorepo root:
 
 ```sh
 /Applications/Godot_mono.app/Contents/MacOS/Godot \
   --path demos/godot
 
 /Applications/Godot_mono.app/Contents/MacOS/Godot \
-  --path demos/godot \
-  res://ayagami_demo.tscn
-```
-
-Run the integration smoke tests with:
-
-```sh
-/Applications/Godot_mono.app/Contents/MacOS/Godot \
   --headless --path demos/godot \
   --script res://tests/smoke_test.gd
-
-/Applications/Godot_mono.app/Contents/MacOS/Godot \
-  --headless --path demos/godot \
-  --script res://tests/ayagami_smoke_test.gd
 ```
 
 ## Ayagami through the Cubism Core ABI
@@ -77,8 +59,8 @@ Both scripts restore any pre-existing extension binaries when they exit.
 cd crates/ayagami-godot
 .venv/bin/scons platform=macos arch=arm64 target=template_debug -j8
 cd ../..
-rsync -a --delete crates/ayagami-godot/demo/addons/gd_cubism/ \
-  demos/godot/addons/gd_cubism/
+rsync -a --delete crates/ayagami-godot/addons/ayagami_godot/ \
+  demos/godot/addons/ayagami_godot/
 ```
 
 The extension currently targets the Godot 4.3 ABI and has been exercised with
@@ -87,10 +69,9 @@ of `ayagami-godot`, the Cubism Native SDK, and the sample model.
 
 ## Layout
 
-- `addons/gd_cubism/` — built native extension and shaders used at runtime.
-- `addons/ayagami/` — comparison Ayagami extension fixture.
+- `addons/ayagami_godot/` — generated local copy of the addon used at runtime.
 - `assets/live2d/` — ignored local model assets.
-- `tests/` — smoke, mesh-comparison, ordering, mask, and render tests.
+- `tests/` — smoke, ordering, mask, and render tests.
 
 Performance benchmarks are intentionally kept out of this interactive project.
 See `benchmarks/cubism-matrix/` for the four Core/runtime combinations.

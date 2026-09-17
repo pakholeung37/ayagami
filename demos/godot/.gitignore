@@ -1,8 +1,10 @@
 .godot/
 .DS_Store
 
-# Local build checkout, SDK and build environment. The runnable addon binary is
-# copied into addons/gd_cubism and stays part of this demo directory.
+# Generated from crates/ayagami-godot/addons/ayagami_godot.
+/addons/ayagami_godot/
+
+# Local build checkout, SDK and build environment.
 vendor/
 
 assets/live2d

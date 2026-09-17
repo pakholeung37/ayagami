@@ -28,9 +28,6 @@ share one scene and script.
 - `target/cubism-matrix/build/` holds isolated build artifacts outside the
   Godot project, so Godot cannot discover and load multiple GDExtensions.
 
-`demos/godot/ayagami_demo.tscn` directly exercises the separate Rust GDExtension.
-It is useful for manual comparison, but it is not one of these four cases.
-
 ## Prerequisites
 
 The proprietary SDK and Mao model are not tracked. Put them at:
