@@ -169,6 +169,7 @@ def build_purism_core(jobs: int) -> Path:
             "-DCMAKE_BUILD_TYPE=Release",
             "-DBUILD_SHARED_LIBS=OFF",
             "-DPURISM_CORE_ABI=v6",
+            "-DPURISM_CORE_BUILD_TESTS=ON",
         ]
     )
     run(["cmake", "--build", str(PURISM_BUILD_ROOT), f"-j{jobs}"])

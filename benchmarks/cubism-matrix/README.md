@@ -41,6 +41,11 @@ demos/godot/assets/live2d/mao/
 
 PurismCore is pinned at `modules/purism-core` as a Git submodule. Initialize
 submodules after cloning, or set `PURISM_CORE_ROOT` to use another checkout.
+The matrix configures its Purism build with CTest enabled; run it with:
+
+```sh
+ctest --test-dir target/cubism-matrix/core/purism-v6 --output-on-failure
+```
 
 Validate the matrix alone, or include local prerequisites:
 
