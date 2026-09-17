@@ -9,13 +9,19 @@ set(
   CACHE PATH
   "Cubism Native SDK root"
 )
-set(CORE_PROVIDER "cubism" CACHE STRING "Core implementation: cubism or ayagami")
-set_property(CACHE CORE_PROVIDER PROPERTY STRINGS cubism ayagami)
+set(CORE_PROVIDER "cubism" CACHE STRING "Core implementation: cubism, ayagami, or purism")
+set_property(CACHE CORE_PROVIDER PROPERTY STRINGS cubism ayagami purism)
 set(
   AYAGAMI_CORE_LIBRARY
   "${CMAKE_CURRENT_LIST_DIR}/../../../../target/release/libayagami.a"
   CACHE FILEPATH
   "Ayagami Cubism Core ABI static library"
+)
+set(
+  PURISM_CORE_LIBRARY
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../target/cubism-matrix/core/purism-v6/libPurismCore.a"
+  CACHE FILEPATH
+  "Purism Core v6 static library"
 )
 set(BENCHMARK_CASE_ID "${CORE_PROVIDER}-native" CACHE STRING "Benchmark case identifier")
 set(BENCHMARK_WORKLOAD_ID "mao-20" CACHE STRING "Benchmark workload identifier")
@@ -72,8 +78,10 @@ if (CORE_PROVIDER STREQUAL "cubism")
   set(CORE_LIBRARY ${CORE_PATH}/lib/macos/${ARCHITECTURE}/libLive2DCubismCore.a)
 elseif (CORE_PROVIDER STREQUAL "ayagami")
   set(CORE_LIBRARY ${AYAGAMI_CORE_LIBRARY})
+elseif (CORE_PROVIDER STREQUAL "purism")
+  set(CORE_LIBRARY ${PURISM_CORE_LIBRARY})
 else ()
-  message(FATAL_ERROR "CORE_PROVIDER must be 'cubism' or 'ayagami'")
+  message(FATAL_ERROR "CORE_PROVIDER must be 'cubism', 'ayagami', or 'purism'")
 endif ()
 if (NOT EXISTS ${CORE_LIBRARY})
   message(FATAL_ERROR "Core library does not exist: ${CORE_LIBRARY}")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stage the canonical ayagami-godot addon into Godot projects."""
+"""Stage the canonical gd_cubism addon into Godot projects."""
 
 from __future__ import annotations
 
@@ -9,8 +9,9 @@ import shutil
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SOURCE = REPO_ROOT / "crates/ayagami-godot/addons/ayagami_godot"
-EXTENSION_RESOURCE = "res://addons/ayagami_godot/ayagami_godot.gdextension"
+DEFAULT_SOURCE = REPO_ROOT / "modules/gd-cubism/addons/gd_cubism"
+EXTENSION_RESOURCE = "res://addons/gd_cubism/gd_cubism.gdextension"
+LEGACY_ADDON_NAME = "ayagami_godot"
 
 
 def stage_addon(
@@ -26,9 +27,12 @@ def stage_addon(
     if not (project_root / "project.godot").is_file():
         raise FileNotFoundError(f"Godot project does not exist: {project_root}")
 
-    destination = project_root / "addons/ayagami_godot"
+    destination = project_root / "addons/gd_cubism"
+    legacy_destination = project_root / "addons" / LEGACY_ADDON_NAME
     if destination == addon_source:
         raise ValueError("addon source and staging destination must be different")
+    if legacy_destination.exists():
+        shutil.rmtree(legacy_destination)
     if destination.exists():
         shutil.rmtree(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -42,7 +46,12 @@ def stage_addon(
             if extension_cache.exists()
             else []
         )
-        entries = [line for line in existing if "addons/ayagami_godot/" not in line]
+        entries = [
+            line
+            for line in existing
+            if "addons/gd_cubism/" not in line
+            and f"addons/{LEGACY_ADDON_NAME}/" not in line
+        ]
         entries.append(EXTENSION_RESOURCE)
         extension_cache.write_text("\n".join(entries) + "\n", encoding="utf-8")
 

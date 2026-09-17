@@ -163,7 +163,7 @@ func _finish_benchmark(now_usec: int) -> void:
 		"workload_id": _workload_id,
 		"case_id": _case_id,
 		"core_backend": _core_backend,
-		"host_backend": "ayagami-godot",
+		"host_backend": "gd-cubism",
 		"graphics_api": RenderingServer.get_current_rendering_driver_name(),
 		"build_profile": _build_profile,
 		"godot_version": Engine.get_version_info().get("string", "unknown"),

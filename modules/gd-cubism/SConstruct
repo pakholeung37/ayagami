@@ -9,7 +9,7 @@ from pathlib import Path
 env = SConscript("godot-cpp/SConstruct")
 
 print("")
-print("--- Ayagami Godot ---")
+print("--- gd_cubism ---")
 print("")
 
 

@@ -6,7 +6,7 @@ upstream works retain their original copyrights and license terms.
 
 ## Ayagami
 
-Portions of `crates/ayagami`, `crates/ayagami-render`, and
+Portions of `modules/ayagami`, `modules/ayagami-render`, and
 `demos/ayagami-demo` are derived from
 [Ayagami](https://github.com/AyagamiDev/ayagami).
 
@@ -17,7 +17,7 @@ The upstream project offers this code under the MIT License or Apache License
 
 ## GDCubism
 
-Portions of `crates/ayagami-godot` are derived from
+Portions of `modules/gd-cubism` are derived from
 [GDCubism](https://github.com/MizunagiKB/gd_cubism).
 
 Copyright (c) 2023 MizunagiKB.
@@ -27,9 +27,18 @@ cover the Live2D libraries with which it may be built or linked.
 
 ## godot-cpp
 
-`crates/ayagami-godot/godot-cpp` is a Git submodule of
+`modules/gd-cubism/godot-cpp` is a Git submodule of
 [godot-cpp](https://github.com/godotengine/godot-cpp) and remains subject to
 the license distributed within that submodule.
+
+## PurismCore
+
+`modules/purism-core` is a forked Git submodule of
+[PurismCore](https://github.com/SakuraMotion/PurismCore).
+
+Copyright (c) 2026 Sakura Motion Project.
+
+PurismCore is distributed under the MIT License included in that submodule.
 
 ## Live2D materials
 
@@ -51,6 +60,6 @@ not affiliated with, authorized by, endorsed by, or sponsored by Live2D Inc.
 
 ## learn-wgpu
 
-`crates/ayagami-render/examples/demo_renderer.rs` contains code based on the
+`modules/ayagami-render/examples/demo_renderer.rs` contains code based on the
 [learn-wgpu](https://github.com/sotrh/learn-wgpu) tutorial and retains its MIT
 license notice in the source file.

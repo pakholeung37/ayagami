@@ -1,6 +1,6 @@
-# Ayagami Godot integration demo
+# gd_cubism integration demo
 
-A minimal end-to-end Godot 4 demo using the `ayagami-godot` GDExtension and
+A minimal end-to-end Godot 4 demo using the `gd_cubism` GDExtension and
 Cubism Native Framework with the local Nijiiro Mao sample model.
 
 ## Local prerequisites
@@ -17,8 +17,8 @@ Initialize `godot-cpp` and prepare SCons once:
 
 ```sh
 git submodule update --init --recursive
-python3 -m venv crates/ayagami-godot/.venv
-crates/ayagami-godot/.venv/bin/python -m pip install scons==4.7.0
+python3 -m venv modules/gd-cubism/.venv
+modules/gd-cubism/.venv/bin/python -m pip install scons==4.7.0
 ```
 
 ## Run
@@ -37,7 +37,7 @@ the monorepo root:
 
 ## Ayagami through the Cubism Core ABI
 
-The optional `cubism-core-abi` feature in `crates/ayagami` exposes Ayagami
+The optional `cubism-core-abi` feature in `modules/ayagami` exposes Ayagami
 through the Cubism Core C ABI expected by the native framework. Run its complete
 build/copy/test/restore cycle from the monorepo root:
 
@@ -53,25 +53,25 @@ tools/run_cubism_core_demo.sh
 ```
 
 Both scripts restore any pre-existing extension binaries when they exit. See
-`crates/ayagami/CUBISM_CORE_ABI.md` for the manual build and compatibility
+`modules/ayagami/CUBISM_CORE_ABI.md` for the manual build and compatibility
 details.
 
-## Rebuild the `ayagami-godot` addon
+## Rebuild the `gd_cubism` addon
 
 ```sh
-cd crates/ayagami-godot
-.venv/bin/scons platform=macos arch=arm64 target=template_debug -j8
+cd modules/gd-cubism
+.venv/bin/python -m SCons platform=macos arch=arm64 target=template_debug -j8
 cd ../..
 python3 tools/stage_godot_addon.py demos/godot
 ```
 
 The extension currently targets the Godot 4.3 ABI and has been exercised with
 Godot 4.7.2 Mono on macOS arm64. Distribution remains subject to the licenses
-of `ayagami-godot`, the Cubism Native SDK, and the sample model.
+of `gd_cubism`, the Cubism Native SDK, and the sample model.
 
 ## Layout
 
-- `addons/ayagami_godot/` — generated local copy of the addon used at runtime.
+- `addons/gd_cubism/` — generated local copy of the addon used at runtime.
 - `assets/live2d/` — ignored local model assets.
 - `tests/` — smoke, ordering, mask, and render tests.
 

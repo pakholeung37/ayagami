@@ -12,14 +12,24 @@
       "host": "cubism-framework-native"
     },
     {
+      "id": "purism-native",
+      "core": "purism",
+      "host": "cubism-framework-native"
+    },
+    {
       "id": "cubism-godot",
       "core": "cubism",
-      "host": "ayagami-godot"
+      "host": "gd-cubism"
     },
     {
       "id": "ayagami-godot",
       "core": "ayagami",
-      "host": "ayagami-godot"
+      "host": "gd-cubism"
+    },
+    {
+      "id": "purism-godot",
+      "core": "purism",
+      "host": "gd-cubism"
     }
   ]
 }

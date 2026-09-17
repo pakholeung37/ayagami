@@ -20,6 +20,9 @@ This project builds on the work of two upstream open-source projects:
 - [GDCubism](https://github.com/MizunagiKB/gd_cubism) by MizunagiKB, which
   provides the foundation of the Godot integration. GDCubism-derived portions
   remain Copyright (c) 2023 MizunagiKB and are used under the MIT License.
+- [PurismCore](https://github.com/SakuraMotion/PurismCore) by the Sakura Motion
+  Project, included through a forked Git submodule as an alternative Cubism
+  Core-compatible provider under its MIT License.
 
 The maintainers and contributors of those projects are not responsible for,
 and do not necessarily endorse, the changes made in this repository.

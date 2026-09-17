@@ -1,6 +1,6 @@
 # Cubism compatibility and performance matrix
 
-This project renders 20 independent instances of Nijiiro Mao to compare two
+This project renders 20 independent instances of Nijiiro Mao to compare three
 Cubism Core ABI providers across two host/rendering stacks. Compatibility must
 be established before performance numbers are treated as valid.
 
@@ -8,20 +8,22 @@ be established before performance numbers are treated as valid.
 | --- | --- | --- | --- |
 | `cubism-native` | Official Cubism Core | Cubism Framework Native | Baseline |
 | `ayagami-native` | Ayagami Core ABI | Cubism Framework Native | Isolate Ayagami Core |
-| `cubism-godot` | Official Cubism Core | ayagami-godot | Isolate Godot integration |
-| `ayagami-godot` | Ayagami Core ABI | ayagami-godot | End-to-end Ayagami stack |
+| `purism-native` | Purism Core v6 ABI | Cubism Framework Native | Isolate Purism Core |
+| `cubism-godot` | Official Cubism Core | gd_cubism | Isolate Godot integration |
+| `ayagami-godot` | Ayagami Core ABI | gd_cubism | Ayagami Core through the Godot stack |
+| `purism-godot` | Purism Core v6 ABI | gd_cubism | Purism Core with the Godot stack |
 
 The Core implementation is selected at link time. The matrix therefore creates
-four separate artifacts; it never switches Core implementations inside a
-running process. Both Native cases share one C++ runner, and both Godot cases
+six separate artifacts; it never switches Core implementations inside a
+running process. All Native cases share one C++ runner, and all Godot cases
 share one scene and script.
 
 ## Layout
 
-- `config/matrix.json` defines the four permitted combinations.
+- `config/matrix.json` defines the six permitted combinations.
 - `config/mao-20.json` is the shared workload definition.
 - `runners/native/` is the Cubism Framework OpenGL runner.
-- `runners/godot/` is the ayagami-godot runner.
+- `runners/godot/` is the gd_cubism runner.
 - `tools/matrix.py` validates, prepares, builds, and runs individual cases.
 - `results/historical/` preserves measurements from before this restructure.
 - `artifacts/results/`, `addons/`, and `assets/` are generated/local and ignored.
@@ -36,6 +38,9 @@ The proprietary SDK and Mao model are not tracked. Put them at:
 third_party/CubismSdkForNative-5-r.5/
 demos/godot/assets/live2d/mao/
 ```
+
+PurismCore is pinned at `modules/purism-core` as a Git submodule. Initialize
+submodules after cloning, or set `PURISM_CORE_ROOT` to use another checkout.
 
 Validate the matrix alone, or include local prerequisites:
 
@@ -63,6 +68,9 @@ python3 benchmarks/cubism-matrix/tools/matrix.py run cubism-native
 
 python3 benchmarks/cubism-matrix/tools/matrix.py build-native ayagami-native
 python3 benchmarks/cubism-matrix/tools/matrix.py run ayagami-native
+
+python3 benchmarks/cubism-matrix/tools/matrix.py build-native purism-native
+python3 benchmarks/cubism-matrix/tools/matrix.py run purism-native
 ```
 
 The current Native runner uses OpenGL. A future Metal runner should report a
@@ -72,7 +80,10 @@ different `graphics_api` and must not be merged into the OpenGL baseline.
 
 Initialize the extension build environment as described in `demos/godot/README.md`.
 Building a case copies its complete addon into a case-specific artifact and
-then stages that addon plus the local Mao fixture into this isolated project.
+rewrites the editor/debug GDExtension entry to select the freshly built release
+library. It then stages that addon plus the local Mao fixture into this isolated
+project. This rewrite is required because the Godot editor executable normally
+selects the debug entry even when benchmarking a `template_release` extension.
 
 ```sh
 python3 benchmarks/cubism-matrix/tools/matrix.py build-godot cubism-godot
@@ -80,6 +91,9 @@ python3 benchmarks/cubism-matrix/tools/matrix.py run cubism-godot
 
 python3 benchmarks/cubism-matrix/tools/matrix.py build-godot ayagami-godot
 python3 benchmarks/cubism-matrix/tools/matrix.py run ayagami-godot
+
+python3 benchmarks/cubism-matrix/tools/matrix.py build-godot purism-godot
+python3 benchmarks/cubism-matrix/tools/matrix.py run purism-godot
 ```
 
 Use `GODOT_BIN` or `--godot-bin` when Godot is installed elsewhere.

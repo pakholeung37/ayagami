@@ -1,8 +1,8 @@
 .godot/
 .DS_Store
 
-# Generated from crates/ayagami-godot/addons/ayagami_godot.
-/addons/ayagami_godot/
+# Generated from modules/gd-cubism/addons/gd_cubism.
+/addons/gd_cubism/
 
 # Local build checkout, SDK and build environment.
 vendor/

@@ -1,8 +1,8 @@
 [workspace]
 resolver = "3"
 members = [
-    "crates/ayagami",
-    "crates/ayagami-render",
+    "modules/ayagami",
+    "modules/ayagami-render",
     "demos/ayagami-demo",
 ]
 
