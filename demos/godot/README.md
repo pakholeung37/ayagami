@@ -37,21 +37,24 @@ the monorepo root:
 
 ## Ayagami through the Cubism Core ABI
 
-The temporary shim in `crates/cubism-core-shim/` exposes Ayagami through the
-Cubism Core C ABI expected by the native framework. Run its complete
+The optional `cubism-core-abi` feature in `crates/ayagami` exposes Ayagami
+through the Cubism Core C ABI expected by the native framework. Run its complete
 build/copy/test/restore cycle from the monorepo root:
 
 ```sh
-crates/cubism-core-shim/run_experiment.sh
+tools/run_cubism_core_experiment.sh
 ```
 
-To launch the interactive demo with the shim installed temporarily:
+To launch the interactive demo with the Ayagami ABI provider installed
+temporarily:
 
 ```sh
-crates/cubism-core-shim/run_demo.sh
+tools/run_cubism_core_demo.sh
 ```
 
-Both scripts restore any pre-existing extension binaries when they exit.
+Both scripts restore any pre-existing extension binaries when they exit. See
+`crates/ayagami/CUBISM_CORE_ABI.md` for the manual build and compatibility
+details.
 
 ## Rebuild the `ayagami-godot` addon
 

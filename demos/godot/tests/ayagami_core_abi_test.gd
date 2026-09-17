@@ -16,7 +16,7 @@ func _run() -> void:
 
 	assert(
 		model.csm_get_version().version == 0x05030000,
-		"Test is not running against the Ayagami Core shim"
+		"Test is not running against the Ayagami Core ABI provider"
 	)
 	assert(model.get_parameters().size() == 128, "Ayagami Core parameter ABI mismatch")
 	assert(model.get_meshes().size() == 260, "Ayagami Core drawable ABI mismatch")
@@ -49,7 +49,7 @@ func _run() -> void:
 	assert(drawable_surfaces > 200, "Ayagami-backed gd_cubism did not build drawable geometry")
 
 	print(
-		"AYAGAMI_CORE_SHIM_TEST_OK parameters=%d drawables=%d surfaces=%d mask_viewports=%d canvas=%s"
+		"AYAGAMI_CORE_ABI_TEST_OK parameters=%d drawables=%d surfaces=%d mask_viewports=%d canvas=%s"
 		% [
 			model.get_parameters().size(),
 			model.get_meshes().size(),

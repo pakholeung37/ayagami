@@ -7,9 +7,9 @@ be established before performance numbers are treated as valid.
 | Case | Core provider | Host/rendering stack | Purpose |
 | --- | --- | --- | --- |
 | `cubism-native` | Official Cubism Core | Cubism Framework Native | Baseline |
-| `ayagami-native` | Ayagami Core ABI shim | Cubism Framework Native | Isolate Ayagami Core |
+| `ayagami-native` | Ayagami Core ABI | Cubism Framework Native | Isolate Ayagami Core |
 | `cubism-godot` | Official Cubism Core | ayagami-godot | Isolate Godot integration |
-| `ayagami-godot` | Ayagami Core ABI shim | ayagami-godot | End-to-end Ayagami stack |
+| `ayagami-godot` | Ayagami Core ABI | ayagami-godot | End-to-end Ayagami stack |
 
 The Core implementation is selected at link time. The matrix therefore creates
 four separate artifacts; it never switches Core implementations inside a

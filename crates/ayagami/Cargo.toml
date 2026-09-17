@@ -3,6 +3,10 @@ name = "ayagami"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+default = []
+cubism-core-abi = []
+
 [dependencies]
 byteorder = "1.5.0"
 derive_more = { version = "2.1.1", features = ["debug", "display"] }
@@ -20,7 +24,7 @@ zerocopy = { version = "0.8.52", features = ["std"] }
 zerocopy-derive = "0.8.52"
 
 [lib]
-crate-type = ["cdylib", "rlib"]
+crate-type = ["staticlib", "cdylib", "rlib"]
 
 [[bin]]
 name = "load-model"

@@ -13,7 +13,7 @@ set(CORE_PROVIDER "cubism" CACHE STRING "Core implementation: cubism or ayagami"
 set_property(CACHE CORE_PROVIDER PROPERTY STRINGS cubism ayagami)
 set(
   AYAGAMI_CORE_LIBRARY
-  "${CMAKE_CURRENT_LIST_DIR}/../../../../target/release/libayagami_cubism_core.a"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../target/release/libayagami.a"
   CACHE FILEPATH
   "Ayagami Cubism Core ABI static library"
 )

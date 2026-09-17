@@ -1,6 +1,11 @@
-use ayagami::core::{AlphaBlendMode, ArtMesh, ColorBlendMode, Item, Model, Param, Part};
-use ayagami::driver::{DrawNode, Driver};
-use ayagami::file::ParsedModel;
+//! Cubism Core C ABI compatibility layer backed by Ayagami.
+//!
+//! This module is enabled by the `cubism-core-abi` Cargo feature. Its exported
+//! symbols allow Cubism Framework clients to link directly against Ayagami.
+
+use crate::core::{AlphaBlendMode, ArtMesh, ColorBlendMode, Item, Model, Param, Part};
+use crate::driver::{DrawNode, Driver};
+use crate::file::ParsedModel;
 use std::ffi::{CString, c_char, c_void};
 use std::io::Cursor;
 use std::ptr;
@@ -82,13 +87,13 @@ fn cstring(value: &str) -> CString {
     CString::new(value).unwrap_or_else(|_| CString::new("invalid-id").unwrap())
 }
 
-fn vec2(v: ayagami::core::Coord) -> CsmVector2 {
+fn vec2(v: crate::core::Coord) -> CsmVector2 {
     // Ayagami uses screen-style Y-down model coordinates; Cubism Core exposes
     // Y-up coordinates and gd_cubism flips them for Godot.
     CsmVector2 { x: v.x, y: -v.y }
 }
 
-fn core_uv(v: ayagami::core::Coord) -> CsmVector2 {
+fn core_uv(v: crate::core::Coord) -> CsmVector2 {
     // Ayagami exposes top-left-origin texture coordinates. Cubism Core's ABI
     // exposes bottom-left-origin V, which gd_cubism converts back for Godot.
     CsmVector2 {
@@ -222,8 +227,8 @@ impl CoreModel {
                         flags |= 1 << 3;
                     }
                     match a.blend_config().simple() {
-                        Some(ayagami::core::BlendMode::Add) => flags |= 1,
-                        Some(ayagami::core::BlendMode::Multiply) => flags |= 1 << 1,
+                        Some(crate::core::BlendMode::Add) => flags |= 1,
+                        Some(crate::core::BlendMode::Multiply) => flags |= 1 << 1,
                         _ => {}
                     }
                     flags
@@ -575,8 +580,6 @@ pub extern "C" fn csmGetOffscreenConstantFlags(_: *const c_void) -> *const u8 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs::File;
-    use std::path::PathBuf;
 
     #[test]
     fn rejects_non_moc_data() {
@@ -589,22 +592,14 @@ mod tests {
     }
 
     #[test]
-    fn mao_model_exposes_the_expected_core_shape() {
-        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("../../demos/godot/assets/live2d/mao/runtime/mao_pro.moc3");
-        let model = Arc::new(ParsedModel::load(&mut File::open(path).unwrap()).unwrap());
-        let core = CoreModel::new(model);
-        assert_eq!(core.parameter_values.len(), 128);
-        assert_eq!(core.drawable_vertices.len(), 260);
-        assert!(core.drawable_mask_counts.iter().any(|count| *count > 0));
-        assert!(core.drawable_opacities.iter().any(|opacity| *opacity > 0.0));
-        let mut render_orders = core.render_orders.clone();
-        render_orders.sort_unstable();
-        assert_eq!(render_orders, (0..260).collect::<Vec<_>>());
-        assert!(
-            core.drawable_vertices
-                .iter()
-                .all(|vertices| !vertices.is_empty())
+    fn reports_core_and_moc_versions() {
+        let moc_header = *b"MOC3\x06\x00\x00\x00";
+
+        assert_eq!(csmGetVersion(), 0x05030000);
+        assert_eq!(csmGetLatestMocVersion(), 6);
+        assert_eq!(
+            csmGetMocVersion(moc_header.as_ptr().cast(), moc_header.len() as u32),
+            6
         );
     }
 }

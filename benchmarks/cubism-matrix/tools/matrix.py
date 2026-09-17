@@ -88,9 +88,19 @@ def prepare_godot(addon_source: Path | None = None, model_source: Path | None = 
     print(f"prepared isolated Godot project at {MATRIX_ROOT}")
 
 
-def build_shim() -> Path:
-    run(["cargo", "build", "--release", "-p", "ayagami-cubism-core"])
-    archive = REPO_ROOT / "target/release/libayagami_cubism_core.a"
+def build_ayagami_core() -> Path:
+    run(
+        [
+            "cargo",
+            "build",
+            "--release",
+            "-p",
+            "ayagami",
+            "--features",
+            "cubism-core-abi",
+        ]
+    )
+    archive = REPO_ROOT / "target/release/libayagami.a"
     if not archive.is_file():
         raise FileNotFoundError(f"Cargo did not produce {archive}")
     return archive
@@ -127,7 +137,7 @@ def build_native(case_id: str, jobs: int) -> Path:
             f"cd {setup.parent} && ./setup_glew_glfw"
         )
     if case["core"] == "ayagami":
-        build_shim()
+        build_ayagami_core()
     model_path = prepare_model()
     model_hash = hashlib.sha256(model_path.read_bytes()).hexdigest()
     build_dir = BUILD_ROOT / case_id / "native"
@@ -161,7 +171,7 @@ def build_godot(case_id: str, jobs: int, platform: str, arch: str) -> Path:
     environment = os.environ.copy()
     environment["CUBISM_SDK_ROOT"] = str(SDK_ROOT)
     if case["core"] == "ayagami":
-        environment["CUBISM_CORE_LIBRARY"] = str(build_shim())
+        environment["CUBISM_CORE_LIBRARY"] = str(build_ayagami_core())
     else:
         environment.pop("CUBISM_CORE_LIBRARY", None)
     run(

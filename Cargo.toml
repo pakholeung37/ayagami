@@ -4,16 +4,11 @@ members = [
     "crates/ayagami",
     "crates/ayagami-render",
     "demos/ayagami-demo",
-    "crates/cubism-core-shim",
 ]
 
-# The ABI experiment is exercised in debug builds, but deformation is too slow
-# without optimization. Keep these overrides here because workspace members do
-# not use profile settings from their own manifests.
+# Interactive deformation and ABI compatibility tests are too slow without
+# optimization. Keep this override here because workspace members do not use
+# profile settings from their own manifests.
 [profile.dev.package.ayagami]
 opt-level = 3
 debug = 0
-
-[profile.dev.package.ayagami-cubism-core]
-opt-level = 3
-debug = 1
