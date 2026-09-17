@@ -376,7 +376,7 @@ impl AyagamiTestApp {
         egui::widgets::global_theme_preference_switch(ui);
 
         ui.separator();
-        ui.label("Ayagami Model Poser");
+        ui.label("Kasane 2D");
 
         if let Some(render_state) = frame.wgpu_render_state() {
             let info = render_state.adapter.get_info();

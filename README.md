@@ -1,17 +1,11 @@
-# Ayagami
+# Kasane 2D
 
-Ayagami (彩紙) is an experimental, open-source runtime for loading, deforming,
-and rendering 2D puppet models. It is written primarily in Rust and focuses on
-interoperability with models created for the Live2D Cubism ecosystem.
-
-This monorepo brings together the Ayagami model runtime, a reference `wgpu`
-renderer and demo, a Godot GDExtension, an optional Cubism Core ABI
-compatibility layer, and a reproducible native/Godot compatibility and
-performance matrix.
+Kasane 2D is an experimental, open-source runtime for loading, deforming, and
+rendering real-time 2D puppet models.
 
 ## Acknowledgements
 
-This project builds on the work of two upstream open-source projects:
+This project builds on the work of three upstream open-source projects:
 
 - [Ayagami](https://github.com/AyagamiDev/ayagami), which provides the original
   Rust model parser, deformation runtime, renderer, and demo. Copyright remains
