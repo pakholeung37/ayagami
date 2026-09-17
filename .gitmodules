@@ -1,0 +1,4 @@
+[submodule "ayagami-godot/godot-cpp"]
+	path = ayagami-godot/godot-cpp
+	url = https://github.com/godotengine/godot-cpp
+	branch = 4.1

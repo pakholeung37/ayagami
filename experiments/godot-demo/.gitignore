@@ -1,0 +1,14 @@
+.godot/
+.DS_Store
+
+# Local build checkout, SDK and build environment. The runnable addon binary is
+# copied into addons/gd_cubism and stays part of this demo directory.
+vendor/
+
+assets/live2d
+artifacts
+
+# Local stress-test outputs.
+benchmarks/native_cubism_20/build/
+benchmarks/native_cubism_20/Resources/
+experiments/ayagami_cubism_core/target/

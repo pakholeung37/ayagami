@@ -7,6 +7,10 @@
 
 Ayagami (彩紙) is a 2D puppet model loading and rendering library written in Rust. It is designed to be compatible with models in the Live2D model format, while being extensible to new model formats and features in the future.
 
+This repository is a monorepo containing the core library, reference renderer,
+demos, Godot integration, and compatibility experiments. See
+[`MONOREPO.md`](MONOREPO.md) for the directory map and development commands.
+
 **Ayagami is completely free software dual licensed under the MIT and Apache2 licenses**. You may use it for any purpose as long as you abide by your choice of either license, without having to pay any royalties or obtain permission from anyone. This includes any use cases, **including both games with built-in models and expandable applications that load user-provided models**.
 
 This software is developed strictly **using black-box reverse engineering only**. That means that it is a complete, from-scratch, independent implementation, and no license terms were violated during its development. **We have never and will never disassemble or decompile any proprietary software in order to develop this project**. To guarantee this, we have a strict [contributor policy](CONTRIBUTING.md).
