@@ -1,6 +1,6 @@
 extends Node2D
 
-const WORKLOAD_PATH := "res://config/mao-20.json"
+const WORKLOAD_PATH := "res://config/mao-40.json"
 
 var _models: Array[GDCubismUserModel] = []
 var _workload_id := ""
@@ -53,7 +53,7 @@ func _ready() -> void:
 		)
 		_models.append(model)
 
-	print("BENCHMARK_READY case=%s renderer=%s models=%d size=%dx%d warmup_s=%.1f sample_s=%.1f" % [
+	print("BENCHMARK_READY case=%s renderer=%s models=%d size=%dx%d mipmaps=on warmup_s=%.1f sample_s=%.1f" % [
 		_case_id, RenderingServer.get_current_rendering_driver_name(), _model_count,
 		int(_viewport_size.x), int(_viewport_size.y), _warmup_seconds, _sample_seconds,
 	])
@@ -171,6 +171,7 @@ func _finish_benchmark(now_usec: int) -> void:
 		"model_hash": FileAccess.get_sha256(_model_path),
 		"instances": _model_count,
 		"viewport": [int(_viewport_size.x), int(_viewport_size.y)],
+		"texture_mipmaps": true,
 		"warmup_seconds": _warmup_seconds,
 		"sample_seconds": seconds,
 		"frames": frames,

@@ -21,7 +21,7 @@ from stage_godot_addon import stage_addon
 
 
 MATRIX_PATH = MATRIX_ROOT / "config" / "matrix.json"
-WORKLOAD_PATH = MATRIX_ROOT / "config" / "mao-20.json"
+WORKLOAD_PATH = MATRIX_ROOT / "config" / "mao-40.json"
 BUILD_ROOT = REPO_ROOT / "target/cubism-matrix/build"
 SDK_ROOT = REPO_ROOT / "third_party/CubismSdkForNative-5-r.5"
 PURISM_ROOT = Path(

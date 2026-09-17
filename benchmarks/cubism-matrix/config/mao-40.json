@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "id": "mao-20",
+  "id": "mao-40",
   "model": "mao_pro",
   "model_path": "res://assets/live2d/mao/runtime/mao_pro.model3.json",
-  "instances": 20,
+  "instances": 40,
   "layout": {
-    "columns": 5,
+    "columns": 10,
     "rows": 4,
     "cell_fill": 0.92
   },

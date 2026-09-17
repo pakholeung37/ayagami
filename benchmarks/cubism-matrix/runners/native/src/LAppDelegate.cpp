@@ -124,7 +124,7 @@ bool LAppDelegate::Initialize()
 
     //AppViewの初期化
     _view->Initialize(width, height);
-    // Benchmark scene has no sample UI sprites; only the 20 Cubism models are rendered.
+    // Benchmark scene has no sample UI sprites; only the configured Cubism models are rendered.
 
     return GL_TRUE;
 }
@@ -156,7 +156,7 @@ void LAppDelegate::Run()
     std::vector<double> frameTimesMs;
 
     std::printf(
-        "BENCHMARK_READY case=%s renderer=opengl models=%d size=%dx%d warmup_s=%.1f sample_s=%.1f\n",
+        "BENCHMARK_READY case=%s renderer=opengl models=%d size=%dx%d mipmaps=on warmup_s=%.1f sample_s=%.1f\n",
         BenchmarkConfig::CaseId, BenchmarkConfig::ModelCount,
         BenchmarkConfig::Width, BenchmarkConfig::Height,
         warmupSeconds, sampleSeconds);
@@ -238,7 +238,7 @@ void LAppDelegate::Run()
                     "\"core_backend\":\"%s\",\"host_backend\":\"cubism-framework-native\","
                     "\"graphics_api\":\"opengl\",\"build_profile\":\"release\","
                     "\"workload_id\":\"%s\",\"model\":\"%s\",\"model_hash\":\"%s\","
-                    "\"instances\":%d,\"viewport\":[%d,%d],"
+                    "\"instances\":%d,\"viewport\":[%d,%d],\"texture_mipmaps\":true,"
                     "\"warmup_seconds\":%.6f,"
                     "\"sample_seconds\":%.6f,\"frames\":%zu,\"average_fps\":%.6f,"
                     "\"p50_frame_ms\":%.6f,\"p95_frame_ms\":%.6f,\"p99_frame_ms\":%.6f}\n",

@@ -1,6 +1,6 @@
 # Cubism compatibility and performance matrix
 
-This project renders 20 independent instances of Nijiiro Mao to compare three
+This project renders 40 independent instances of Nijiiro Mao to compare three
 Cubism Core ABI providers across two host/rendering stacks. Compatibility must
 be established before performance numbers are treated as valid.
 
@@ -21,7 +21,8 @@ share one scene and script.
 ## Layout
 
 - `config/matrix.json` defines the six permitted combinations.
-- `config/mao-20.json` is the shared workload definition.
+- `config/mao-40.json` is the shared workload definition. Its 10x4 grid keeps
+  each model near the previous on-screen size while doubling update/render load.
 - `runners/native/` is the Cubism Framework OpenGL runner.
 - `runners/godot/` is the gd_cubism runner.
 - `tools/matrix.py` validates, prepares, builds, and runs individual cases.
@@ -63,7 +64,7 @@ cd third_party/CubismSdkForNative-5-r.5/Samples/OpenGL/thirdParty/scripts
 
 ## Native cases
 
-The tool maps `config/mao-20.json` into CMake definitions so the C++ runner
+The tool maps `config/mao-40.json` into CMake definitions so the C++ runner
 uses the same instance count, grid, viewport, warmup, and sampling interval as
 Godot.
 
@@ -123,6 +124,7 @@ percentiles.
 ## Measurement rules
 
 - Use Release builds, VSync off, the same model fixture and viewport.
+- Generate texture mipmaps in both stacks and use linear mipmap filtering.
 - Run compatibility checks before collecting performance results.
 - Execute every case multiple times in an interleaved order.
 - Compare medians and spread, not a single best run.

@@ -299,9 +299,11 @@ void LAppLive2DManager::ChangeScene(Csm::csmInt32 index)
 
         const csmInt32 column = i % columns;
         const csmInt32 row = i / columns;
-        const csmFloat32 screenX = -0.8f + 1.6f * static_cast<csmFloat32>(column) / static_cast<csmFloat32>(columns - 1);
+        const csmFloat32 screenX =
+            -1.0f + 2.0f * (static_cast<csmFloat32>(column) + 0.5f) / static_cast<csmFloat32>(columns);
         // Mao's visible art is vertically offset inside its canvas; these centers keep all four rows visible.
-        const csmFloat32 screenY = 1.02f - 1.5f * static_cast<csmFloat32>(row) / static_cast<csmFloat32>(rows - 1);
+        const csmFloat32 screenY =
+            1.27f - 2.0f * (static_cast<csmFloat32>(row) + 0.5f) / static_cast<csmFloat32>(rows);
         _models[i]->GetModelMatrix()->SetHeight(0.44f);
         _models[i]->GetModelMatrix()->SetCenterPosition(screenX / projectionScaleX, screenY);
     }

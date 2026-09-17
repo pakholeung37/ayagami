@@ -185,6 +185,26 @@ bool InternalCubismUserModel::model_load_resource()
         }
 
         ERR_FAIL_COND_V_MSG(tex.is_null(), false, "Could not load Cubism texture: " + texture_pathname);
+
+        // Cubism's Native OpenGL sample generates a complete mip chain and
+        // samples it with trilinear filtering. Imported Godot textures do not
+        // necessarily contain mipmaps, even though our shaders request a
+        // mipmap sampler. Normalize the texture here so both rendering stacks
+        // use equivalent texture data and filtering behavior.
+        Ref<Image> texture_image = tex->get_image();
+        ERR_FAIL_COND_V_MSG(texture_image.is_null() || texture_image->is_empty(), false,
+            "Could not read Cubism texture image: " + texture_pathname);
+        if (!texture_image->has_mipmaps()) {
+            const Error mipmap_error = texture_image->generate_mipmaps();
+            ERR_FAIL_COND_V_MSG(mipmap_error != OK, false,
+                "Could not generate Cubism texture mipmaps: " + texture_pathname);
+            tex = ImageTexture::create_from_image(texture_image);
+            ERR_FAIL_COND_V_MSG(tex.is_null(), false,
+                "Could not upload Cubism texture mipmaps: " + texture_pathname);
+            // Replace the cached non-mipmapped resource so subsequent model
+            // instances reuse this GPU texture instead of uploading a copy.
+            tex->take_over_path(texture_pathname);
+        }
         this->_renderer_resource.ary_texture.append(tex);
     }
     for (int i = 0; i < this->_model->GetDrawableCount(); ++i) {
