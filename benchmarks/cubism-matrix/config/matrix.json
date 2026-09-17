@@ -30,6 +30,21 @@
       "id": "purism-godot",
       "core": "purism",
       "host": "gd-cubism"
+    },
+    {
+      "id": "cubism-core",
+      "core": "cubism",
+      "host": "core-only"
+    },
+    {
+      "id": "ayagami-core",
+      "core": "ayagami",
+      "host": "core-only"
+    },
+    {
+      "id": "purism-core",
+      "core": "purism",
+      "host": "core-only"
     }
   ]
 }

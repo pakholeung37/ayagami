@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import statistics
 import subprocess
 import sys
 
@@ -39,7 +40,7 @@ def load_configuration() -> tuple[dict, dict]:
     matrix = read_json(MATRIX_PATH)
     workload = read_json(WORKLOAD_PATH)
     providers = {"cubism", "ayagami", "purism"}
-    hosts = {"cubism-framework-native", "gd-cubism"}
+    hosts = {"cubism-framework-native", "gd-cubism", "core-only"}
     expected = {(provider, host) for provider in providers for host in hosts}
     cases = matrix.get("cases", [])
     actual = {(case.get("core"), case.get("host")) for case in cases}
@@ -65,6 +66,16 @@ def find_case(case_id: str) -> tuple[dict, dict]:
 def run(command: list[str], *, cwd: Path = REPO_ROOT, env: dict | None = None) -> None:
     print("+", " ".join(command), flush=True)
     subprocess.run(command, cwd=cwd, env=env, check=True)
+
+
+def run_capture(command: list[str], *, cwd: Path = REPO_ROOT) -> str:
+    print("+", " ".join(command), flush=True)
+    completed = subprocess.run(
+        command, cwd=cwd, check=True, text=True,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+    )
+    print(completed.stdout, end="", flush=True)
+    return completed.stdout
 
 
 def replace_tree(source: Path, destination: Path) -> None:
@@ -236,6 +247,34 @@ def build_native(case_id: str, jobs: int) -> Path:
     return executable
 
 
+def build_core(case_id: str, jobs: int) -> Path:
+    case, workload = find_case(case_id)
+    if case["host"] != "core-only":
+        raise ValueError(f"{case_id} is not a Core-only case")
+    if case["core"] == "ayagami":
+        build_ayagami_core()
+    elif case["core"] == "purism":
+        build_purism_core(jobs)
+    build_dir = BUILD_ROOT / case_id / "core"
+    source_dir = MATRIX_ROOT / "runners/core"
+    command = [
+        "cmake", "-S", str(source_dir), "-B", str(build_dir),
+        "-DCMAKE_BUILD_TYPE=Release",
+        f"-DSDK_ROOT_PATH={SDK_ROOT}",
+        f"-DCORE_PROVIDER={case['core']}",
+        f"-DAYAGAMI_CORE_LIBRARY={REPO_ROOT / 'target/release/libayagami.a'}",
+        f"-DPURISM_CORE_LIBRARY={PURISM_BUILD_ROOT / 'libPurismCore.a'}",
+        f"-DBENCHMARK_CASE_ID={case_id}",
+        f"-DBENCHMARK_MODEL_COUNT={workload['instances']}",
+    ]
+    run(command)
+    run(["cmake", "--build", str(build_dir), f"-j{jobs}"])
+    executable = build_dir / "cubism-core-benchmark"
+    if not executable.is_file():
+        raise FileNotFoundError(f"Core-only build did not produce {executable}")
+    return executable
+
+
 def build_godot(case_id: str, jobs: int, platform: str, arch: str) -> Path:
     case, _ = find_case(case_id)
     if case["host"] != "gd-cubism":
@@ -274,6 +313,13 @@ def build_godot(case_id: str, jobs: int, platform: str, arch: str) -> Path:
 
 def run_case(case_id: str, godot_bin: str) -> None:
     case, _ = find_case(case_id)
+    if case["host"] == "core-only":
+        executable = BUILD_ROOT / case_id / "core/cubism-core-benchmark"
+        if not executable.is_file():
+            raise FileNotFoundError(f"build {case_id} before running it")
+        moc = REPO_ROOT / "demos/godot/assets/live2d/mao/runtime/mao_pro.moc3"
+        run([str(executable), str(moc)], cwd=executable.parent)
+        return
     if case["host"] == "cubism-framework-native":
         executable = BUILD_ROOT / case_id / "native/bin/Demo/Demo"
         if not executable.is_file():
@@ -291,6 +337,75 @@ def run_case(case_id: str, godot_bin: str) -> None:
             f"--case={case_id}", f"--core={case['core']}", "--profile=release",
         ]
     )
+
+
+def parse_benchmark_result(output: str) -> dict:
+    marker = "BENCHMARK_RESULT "
+    position = output.rfind(marker)
+    if position < 0:
+        raise ValueError("benchmark output did not contain BENCHMARK_RESULT")
+    return json.loads(output[position + len(marker):])
+
+
+def benchmark_core(repeats: int, jobs: int) -> Path:
+    if repeats < 1:
+        raise ValueError("repeats must be at least 1")
+    case_ids = ["cubism-core", "ayagami-core", "purism-core"]
+    executables = {case_id: build_core(case_id, jobs) for case_id in case_ids}
+    moc = REPO_ROOT / "demos/godot/assets/live2d/mao/runtime/mao_pro.moc3"
+    trials: dict[str, list[dict]] = {case_id: [] for case_id in case_ids}
+    for repeat in range(repeats):
+        order = case_ids if repeat % 2 == 0 else list(reversed(case_ids))
+        for case_id in order:
+            executable = executables[case_id]
+            output = run_capture([str(executable), str(moc)], cwd=executable.parent)
+            trials[case_id].append(parse_benchmark_result(output))
+
+    phase_names = list(trials[case_ids[0]][0]["phases"])
+    medians: dict[str, dict] = {}
+    for case_id in case_ids:
+        case_trials = trials[case_id]
+        medians[case_id] = {
+            "startup": {
+                key: statistics.median(trial["startup"][key] for trial in case_trials)
+                for key in ("copy_ns", "consistency_with_copy_ns", "revive_with_copy_ns", "initialize_ns")
+            },
+            "phases": {
+                phase: statistics.median(
+                    trial["phases"][phase]["ns_per_operation"] for trial in case_trials
+                )
+                for phase in phase_names
+            },
+            "working_set_ns_per_model": statistics.median(
+                trial["working_set_ns_per_model"] for trial in case_trials
+            ),
+            "working_set_model_updates_per_second": statistics.median(
+                trial["working_set_model_updates_per_second"] for trial in case_trials
+            ),
+        }
+
+    report = {
+        "schema_version": 1,
+        "benchmark": "cubism-core-only",
+        "model": "mao_pro",
+        "repeats": repeats,
+        "trials": trials,
+        "medians": medians,
+    }
+    output_path = MATRIX_ROOT / "artifacts/results/latest-core-only.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+
+    baseline = medians["cubism-core"]["working_set_ns_per_model"]
+    print("\nCore-only median summary (lower ns/model is better):")
+    for case_id in case_ids:
+        ns_per_model = medians[case_id]["working_set_ns_per_model"]
+        print(
+            f"  {case_id:13} {ns_per_model:10.1f} ns/model  "
+            f"{baseline / ns_per_model:6.2f}x vs official"
+        )
+    print(f"saved {output_path}")
+    return output_path
 
 
 def validate(local: bool) -> None:
@@ -318,7 +433,7 @@ def main() -> int:
     prepare_parser = subparsers.add_parser("prepare-godot")
     prepare_parser.add_argument("--addon-source", type=Path)
     prepare_parser.add_argument("--model-source", type=Path)
-    for name in ("build-native", "build-godot"):
+    for name in ("build-native", "build-godot", "build-core"):
         build_parser = subparsers.add_parser(name)
         build_parser.add_argument("case")
         build_parser.add_argument("--jobs", type=int, default=os.cpu_count() or 4)
@@ -331,6 +446,9 @@ def main() -> int:
         "--godot-bin",
         default=os.environ.get("GODOT_BIN", "/Applications/Godot_mono.app/Contents/MacOS/Godot"),
     )
+    benchmark_core_parser = subparsers.add_parser("benchmark-core")
+    benchmark_core_parser.add_argument("--repeats", type=int, default=3)
+    benchmark_core_parser.add_argument("--jobs", type=int, default=os.cpu_count() or 4)
     args = parser.parse_args()
     try:
         if args.command == "validate":
@@ -341,8 +459,12 @@ def main() -> int:
             build_native(args.case, args.jobs)
         elif args.command == "build-godot":
             build_godot(args.case, args.jobs, args.platform, args.arch)
+        elif args.command == "build-core":
+            build_core(args.case, args.jobs)
         elif args.command == "run":
             run_case(args.case, args.godot_bin)
+        elif args.command == "benchmark-core":
+            benchmark_core(args.repeats, args.jobs)
     except (FileNotFoundError, ValueError, subprocess.CalledProcessError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
