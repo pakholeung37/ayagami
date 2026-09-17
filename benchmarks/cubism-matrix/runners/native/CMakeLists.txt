@@ -9,6 +9,25 @@ set(
   CACHE PATH
   "Cubism Native SDK root"
 )
+set(CORE_PROVIDER "cubism" CACHE STRING "Core implementation: cubism or ayagami")
+set_property(CACHE CORE_PROVIDER PROPERTY STRINGS cubism ayagami)
+set(
+  AYAGAMI_CORE_LIBRARY
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../target/release/libayagami_cubism_core.a"
+  CACHE FILEPATH
+  "Ayagami Cubism Core ABI static library"
+)
+set(BENCHMARK_CASE_ID "${CORE_PROVIDER}-native" CACHE STRING "Benchmark case identifier")
+set(BENCHMARK_WORKLOAD_ID "mao-20" CACHE STRING "Benchmark workload identifier")
+set(BENCHMARK_MODEL_NAME "mao_pro" CACHE STRING "Model identifier")
+set(BENCHMARK_MODEL_HASH "unknown" CACHE STRING "SHA-256 of the model3 fixture")
+set(BENCHMARK_MODEL_COUNT 20 CACHE STRING "Number of model instances")
+set(BENCHMARK_COLUMNS 5 CACHE STRING "Grid columns")
+set(BENCHMARK_ROWS 4 CACHE STRING "Grid rows")
+set(BENCHMARK_WIDTH 1280 CACHE STRING "Framebuffer width")
+set(BENCHMARK_HEIGHT 720 CACHE STRING "Framebuffer height")
+set(BENCHMARK_WARMUP_SECONDS 5.0 CACHE STRING "Warmup duration")
+set(BENCHMARK_SAMPLE_SECONDS 15.0 CACHE STRING "Sample duration")
 set(CORE_PATH ${SDK_ROOT_PATH}/Core)
 set(FRAMEWORK_PATH ${SDK_ROOT_PATH}/Framework)
 set(COMMON_SRC_PATH ${SDK_ROOT_PATH}/Samples/Common)
@@ -44,16 +63,24 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Add Cubism Core.
-# Import as static library.
+# Both providers expose the Cubism Core C ABI and use the official headers.
 add_library(Live2DCubismCore STATIC IMPORTED)
 # Get architecture.
 EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
 # Set library path and inlude path.
-set_target_properties(Live2DCubismCore
-  PROPERTIES
-    IMPORTED_LOCATION ${CORE_PATH}/lib/macos/${ARCHITECTURE}/libLive2DCubismCore.a
-    INTERFACE_INCLUDE_DIRECTORIES ${CORE_PATH}/include
+if (CORE_PROVIDER STREQUAL "cubism")
+  set(CORE_LIBRARY ${CORE_PATH}/lib/macos/${ARCHITECTURE}/libLive2DCubismCore.a)
+elseif (CORE_PROVIDER STREQUAL "ayagami")
+  set(CORE_LIBRARY ${AYAGAMI_CORE_LIBRARY})
+else ()
+  message(FATAL_ERROR "CORE_PROVIDER must be 'cubism' or 'ayagami'")
+endif ()
+if (NOT EXISTS ${CORE_LIBRARY})
+  message(FATAL_ERROR "Core library does not exist: ${CORE_LIBRARY}")
+endif ()
+set_target_properties(Live2DCubismCore PROPERTIES
+  IMPORTED_LOCATION ${CORE_LIBRARY}
+  INTERFACE_INCLUDE_DIRECTORIES ${CORE_PATH}/include
 )
 
 # Add GLEW ,GLFW.
@@ -76,6 +103,20 @@ find_package(OpenGL REQUIRED)
 
 # Make executable app.
 add_executable(${APP_NAME})
+target_compile_definitions(${APP_NAME} PRIVATE
+  AYAGAMI_BENCHMARK_CASE_ID="${BENCHMARK_CASE_ID}"
+  AYAGAMI_BENCHMARK_CORE_PROVIDER="${CORE_PROVIDER}"
+  AYAGAMI_BENCHMARK_WORKLOAD_ID="${BENCHMARK_WORKLOAD_ID}"
+  AYAGAMI_BENCHMARK_MODEL_NAME="${BENCHMARK_MODEL_NAME}"
+  AYAGAMI_BENCHMARK_MODEL_HASH="${BENCHMARK_MODEL_HASH}"
+  AYAGAMI_BENCHMARK_MODEL_COUNT=${BENCHMARK_MODEL_COUNT}
+  AYAGAMI_BENCHMARK_COLUMNS=${BENCHMARK_COLUMNS}
+  AYAGAMI_BENCHMARK_ROWS=${BENCHMARK_ROWS}
+  AYAGAMI_BENCHMARK_WIDTH=${BENCHMARK_WIDTH}
+  AYAGAMI_BENCHMARK_HEIGHT=${BENCHMARK_HEIGHT}
+  AYAGAMI_BENCHMARK_WARMUP_SECONDS=${BENCHMARK_WARMUP_SECONDS}
+  AYAGAMI_BENCHMARK_SAMPLE_SECONDS=${BENCHMARK_SAMPLE_SECONDS}
+)
 # Add common source files.
 add_subdirectory(${COMMON_SRC_PATH} ${CMAKE_CURRENT_BINARY_DIR}/src/Common)
 # Add source files.

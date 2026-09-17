@@ -7,7 +7,3 @@ vendor/
 
 assets/live2d
 artifacts
-
-# Local stress-test outputs.
-benchmarks/native_cubism_20/build/
-benchmarks/native_cubism_20/Resources/

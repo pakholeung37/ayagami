@@ -1,4 +1,4 @@
-# Ayagami Godot integration demo
+# Ayagami Godot integration demos
 
 A minimal end-to-end Godot 4 demo with two runtime paths:
 
@@ -15,7 +15,7 @@ The model and the proprietary Cubism Native SDK cannot be redistributed in
 this repository. Place them at these paths from the monorepo root:
 
 ```text
-demos/godot-demo/assets/live2d/mao/
+demos/godot/assets/live2d/mao/
 crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/
 ```
 
@@ -29,15 +29,15 @@ crates/ayagami-godot/.venv/bin/python -m pip install scons==4.7.0
 
 ## Run
 
-Open `demos/godot-demo/project.godot` with Godot 4.7 or newer, or launch
+Open `demos/godot/project.godot` with Godot 4.7 or newer, or launch
 either scene from the monorepo root:
 
 ```sh
 /Applications/Godot_mono.app/Contents/MacOS/Godot \
-  --path demos/godot-demo
+  --path demos/godot
 
 /Applications/Godot_mono.app/Contents/MacOS/Godot \
-  --path demos/godot-demo \
+  --path demos/godot \
   res://ayagami_demo.tscn
 ```
 
@@ -45,11 +45,11 @@ Run the integration smoke tests with:
 
 ```sh
 /Applications/Godot_mono.app/Contents/MacOS/Godot \
-  --headless --path demos/godot-demo \
+  --headless --path demos/godot \
   --script res://tests/smoke_test.gd
 
 /Applications/Godot_mono.app/Contents/MacOS/Godot \
-  --headless --path demos/godot-demo \
+  --headless --path demos/godot \
   --script res://tests/ayagami_smoke_test.gd
 ```
 
@@ -78,7 +78,7 @@ cd crates/ayagami-godot
 .venv/bin/scons platform=macos arch=arm64 target=template_debug -j8
 cd ../..
 rsync -a --delete crates/ayagami-godot/demo/addons/gd_cubism/ \
-  demos/godot-demo/addons/gd_cubism/
+  demos/godot/addons/gd_cubism/
 ```
 
 The extension currently targets the Godot 4.3 ABI and has been exercised with
@@ -91,4 +91,6 @@ of `ayagami-godot`, the Cubism Native SDK, and the sample model.
 - `addons/ayagami/` — comparison Ayagami extension fixture.
 - `assets/live2d/` — ignored local model assets.
 - `tests/` — smoke, mesh-comparison, ordering, mask, and render tests.
-- `benchmarks/` — Godot and native stress-test scenes.
+
+Performance benchmarks are intentionally kept out of this interactive project.
+See `benchmarks/cubism-matrix/` for the four Core/runtime combinations.

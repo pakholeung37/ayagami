@@ -195,8 +195,8 @@ else:
 
 # Experimental Core ABI replacements can provide a static archive without
 # changing the SDK headers or the open-source Cubism Native Framework sources.
-# This is primarily used by the Ayagami compatibility experiment in the
-# sibling manosaba-live2d checkout.
+# This is primarily used by the monorepo's Ayagami compatibility matrix in
+# benchmarks/cubism-matrix.
 core_library_override = os.environ.get("CUBISM_CORE_LIBRARY") or ARGUMENTS.get("CUBISM_CORE_LIBRARY")
 if core_library_override:
     core_library_override = str(Path(core_library_override).resolve())

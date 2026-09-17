@@ -6,6 +6,7 @@
  */
 
 #include "LAppDelegate.hpp"
+#include "BenchmarkConfig.hpp"
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -147,14 +148,18 @@ void LAppDelegate::Release()
 
 void LAppDelegate::Run()
 {
-    const double warmupSeconds = 5.0;
-    const double sampleSeconds = 15.0;
+    const double warmupSeconds = BenchmarkConfig::WarmupSeconds;
+    const double sampleSeconds = BenchmarkConfig::SampleSeconds;
     const double benchmarkStart = glfwGetTime();
     double sampleStart = 0.0;
     double previousFrame = 0.0;
     std::vector<double> frameTimesMs;
 
-    std::printf("BENCHMARK_READY renderer=opengl models=20 size=1280x720 warmup_s=5.0 sample_s=15.0\n");
+    std::printf(
+        "BENCHMARK_READY case=%s renderer=opengl models=%d size=%dx%d warmup_s=%.1f sample_s=%.1f\n",
+        BenchmarkConfig::CaseId, BenchmarkConfig::ModelCount,
+        BenchmarkConfig::Width, BenchmarkConfig::Height,
+        warmupSeconds, sampleSeconds);
     std::fflush(stdout);
 
     //メインループ
@@ -229,11 +234,18 @@ void LAppDelegate::Run()
                 };
                 const double elapsed = now - sampleStart;
                 std::printf(
-                    "BENCHMARK_RESULT {\"implementation\":\"cubism_native\",\"renderer\":\"opengl\","
-                    "\"model\":\"mao_pro\",\"models\":20,\"width\":1280,\"height\":720,"
+                    "BENCHMARK_RESULT {\"schema_version\":1,\"case_id\":\"%s\","
+                    "\"core_backend\":\"%s\",\"host_backend\":\"cubism-framework-native\","
+                    "\"graphics_api\":\"opengl\",\"build_profile\":\"release\","
+                    "\"workload_id\":\"%s\",\"model\":\"%s\",\"model_hash\":\"%s\","
+                    "\"instances\":%d,\"viewport\":[%d,%d],"
+                    "\"warmup_seconds\":%.6f,"
                     "\"sample_seconds\":%.6f,\"frames\":%zu,\"average_fps\":%.6f,"
                     "\"p50_frame_ms\":%.6f,\"p95_frame_ms\":%.6f,\"p99_frame_ms\":%.6f}\n",
-                    elapsed, frameCount, frameCount / elapsed,
+                    BenchmarkConfig::CaseId, BenchmarkConfig::CoreProvider,
+                    BenchmarkConfig::WorkloadId, BenchmarkConfig::ModelName, BenchmarkConfig::ModelHash,
+                    BenchmarkConfig::ModelCount, BenchmarkConfig::Width, BenchmarkConfig::Height,
+                    warmupSeconds, elapsed, frameCount, frameCount / elapsed,
                     percentile(0.50), percentile(0.95), percentile(0.99));
                 std::fflush(stdout);
                 _isEnd = true;

@@ -42,5 +42,5 @@ From this checkout:
 ```
 
 The paired runtime shaders are under `demo/addons/gd_cubism/res/shader/`.
-The local `manosaba-live2d` benchmark project contains the stress scene,
-mask-allocation regression and batch-versus-unbatched image comparison tests.
+The monorepo's `benchmarks/cubism-matrix` project contains the shared stress
+workload. Godot regression and image-comparison tests remain in `demos/godot`.

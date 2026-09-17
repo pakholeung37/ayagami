@@ -10,7 +10,8 @@
 - `crates/cubism-core-shim/` — temporary Cubism Core C ABI shim backed by
   Ayagami. The intended next step is to move this adapter into
   `crates/ayagami`.
-- `demos/godot-demo/` — end-to-end Godot comparison and regression demo.
+- `demos/godot/` — interactive Godot comparison and regression demo.
+- `benchmarks/cubism-matrix/` — reproducible 2x2 Core/runtime benchmark matrix.
 
 The Rust projects share the root Cargo workspace and lockfile. Run all Rust
 checks from the repository root:
@@ -28,8 +29,9 @@ git submodule update --init --recursive
 
 The proprietary Cubism Native SDK and the demo model are deliberately not
 tracked. Put the SDK under `crates/ayagami-godot/thirdparty/` and the model under
-`demos/godot-demo/assets/live2d/`. See the demo and shim READMEs for the
-build and test commands.
+`demos/godot/assets/live2d/`. The benchmark preparation tool copies that local
+fixture into its isolated Godot project. See the demo, benchmark, and shim
+READMEs for build and test commands.
 
 ## Imported sources
 

@@ -6,6 +6,7 @@
  */
 
 #include "LAppDefine.hpp"
+#include "BenchmarkConfig.hpp"
 #include <CubismFramework.hpp>
 
 namespace LAppDefine {
@@ -67,6 +68,6 @@ namespace LAppDefine {
     const CubismFramework::Option::LogLevel CubismLoggingLevel = CubismFramework::Option::LogLevel_Off;
 
     // デフォルトのレンダーターゲットサイズ
-    const csmInt32 RenderTargetWidth = 1280;
-    const csmInt32 RenderTargetHeight = 720;
+    const csmInt32 RenderTargetWidth = BenchmarkConfig::Width;
+    const csmInt32 RenderTargetHeight = BenchmarkConfig::Height;
 }

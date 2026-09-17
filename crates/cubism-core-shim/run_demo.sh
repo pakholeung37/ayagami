@@ -3,7 +3,7 @@ set -euo pipefail
 
 experiment_dir=${0:A:h}
 repo_dir=${experiment_dir:h:h}
-demo_dir=${repo_dir}/demos/godot-demo
+demo_dir=${repo_dir}/demos/godot
 gd_cubism_dir=${repo_dir}/crates/ayagami-godot
 godot_bin=${GODOT_BIN:-/Applications/Godot_mono.app/Contents/MacOS/Godot}
 shim_archive=${repo_dir}/target/debug/libayagami_cubism_core.a

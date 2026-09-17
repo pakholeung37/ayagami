@@ -6,6 +6,7 @@
  */
 
 #include "LAppLive2DManager.hpp"
+#include "BenchmarkConfig.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -286,10 +287,11 @@ void LAppLive2DManager::ChangeScene(Csm::csmInt32 index)
     modelJsonName += ".model3.json";
 
     ReleaseAllModel();
-    const csmInt32 modelCount = 20;
-    const csmInt32 columns = 5;
-    const csmInt32 rows = 4;
-    const csmFloat32 projectionScaleX = 720.0f / 1280.0f;
+    const csmInt32 modelCount = BenchmarkConfig::ModelCount;
+    const csmInt32 columns = BenchmarkConfig::Columns;
+    const csmInt32 rows = BenchmarkConfig::Rows;
+    const csmFloat32 projectionScaleX =
+        static_cast<csmFloat32>(BenchmarkConfig::Height) / static_cast<csmFloat32>(BenchmarkConfig::Width);
     for (csmInt32 i = 0; i < modelCount; ++i)
     {
         _models.PushBack(new LAppModel());

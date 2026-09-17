@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://benchmarks/gd_cubism_20.gd" id="1_benchmark"]
+[ext_resource type="Script" path="res://runners/godot/benchmark.gd" id="1_benchmark"]
 
 [node name="GDCubism20Benchmark" type="Node2D"]
 script = ExtResource("1_benchmark")

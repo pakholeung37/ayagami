@@ -3,6 +3,7 @@ if (CSM_MINIMUM_DEMO)
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/LAppDefine.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/LAppDefine.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BenchmarkConfig.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/LAppPal.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/LAppPal.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/LAppTextureManager.cpp
@@ -18,6 +19,7 @@ else ()
     PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/LAppDefine.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/LAppDefine.hpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/BenchmarkConfig.hpp
       ${CMAKE_CURRENT_SOURCE_DIR}/LAppDelegate.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/LAppDelegate.hpp
       ${CMAKE_CURRENT_SOURCE_DIR}/LAppLive2DManager.cpp
