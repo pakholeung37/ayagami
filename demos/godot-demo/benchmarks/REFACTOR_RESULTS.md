@@ -50,7 +50,7 @@ states. Results are preserved as `artifacts/benchmarks/refactored-opengl.json`.
 
 ```sh
 /Applications/Godot_mono.app/Contents/MacOS/Godot \
-  --path experiments/godot-demo \
+  --path demos/godot-demo \
   res://benchmarks/gd_cubism_20.tscn -- --seconds=45
 ```
 

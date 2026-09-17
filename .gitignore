@@ -7,5 +7,5 @@ target
 # to be redistributed with this repository.
 crates/ayagami-godot/thirdparty/CubismNativeFramework/
 crates/ayagami-godot/thirdparty/CubismSdkForNative*/
-experiments/godot-demo/assets/live2d/
-experiments/godot-demo/artifacts/
+demos/godot-demo/assets/live2d/
+demos/godot-demo/artifacts/

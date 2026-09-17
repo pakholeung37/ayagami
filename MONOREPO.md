@@ -4,13 +4,13 @@
 
 - `crates/ayagami/` — model parser and deformation runtime.
 - `crates/ayagami-render/` — reference `wgpu` renderer.
-- `apps/ayagami-demo/` — native and web demo built with `egui`.
+- `demos/ayagami-demo/` — native and web demo built with `egui`.
 - `crates/ayagami-godot/` — Godot GDExtension, imported from
   `gd_cubism` and adapted to support an alternate Cubism Core implementation.
-- `experiments/cubism-core-shim/` — temporary Cubism Core C ABI shim backed by
+- `crates/cubism-core-shim/` — temporary Cubism Core C ABI shim backed by
   Ayagami. The intended next step is to move this adapter into
   `crates/ayagami`.
-- `experiments/godot-demo/` — end-to-end Godot comparison and regression demo.
+- `demos/godot-demo/` — end-to-end Godot comparison and regression demo.
 
 The Rust projects share the root Cargo workspace and lockfile. Run all Rust
 checks from the repository root:
@@ -28,7 +28,7 @@ git submodule update --init --recursive
 
 The proprietary Cubism Native SDK and the demo model are deliberately not
 tracked. Put the SDK under `crates/ayagami-godot/thirdparty/` and the model under
-`experiments/godot-demo/assets/live2d/`. See the demo and shim READMEs for the
+`demos/godot-demo/assets/live2d/`. See the demo and shim READMEs for the
 build and test commands.
 
 ## Imported sources

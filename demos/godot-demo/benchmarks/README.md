@@ -30,7 +30,7 @@ The detailed machine-readable output is in `results-2026-09-16.json`.
 
 ```bash
 /Applications/Godot_mono.app/Contents/MacOS/Godot \
-  --path experiments/godot-demo \
+  --path demos/godot-demo \
   res://benchmarks/gd_cubism_20.tscn
 ```
 
@@ -47,7 +47,7 @@ from this Godot project into the build output.
 cd crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/Samples/OpenGL/thirdParty/scripts
 ./setup_glew_glfw
 
-cd experiments/godot-demo/benchmarks/native_cubism_20
+cd demos/godot-demo/benchmarks/native_cubism_20
 cmake -S . -B build \
   -D CMAKE_BUILD_TYPE=Release \
   -D CSM_MINIMUM_DEMO=OFF \

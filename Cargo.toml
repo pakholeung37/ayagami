@@ -3,8 +3,8 @@ resolver = "3"
 members = [
     "crates/ayagami",
     "crates/ayagami-render",
-    "apps/ayagami-demo",
-    "experiments/cubism-core-shim",
+    "demos/ayagami-demo",
+    "crates/cubism-core-shim",
 ]
 
 # The ABI experiment is exercised in debug builds, but deformation is too slow

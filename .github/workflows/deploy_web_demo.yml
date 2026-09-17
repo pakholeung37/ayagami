@@ -60,7 +60,7 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: apps/ayagami-demo/dist
+          folder: demos/ayagami-demo/dist
           single-commit: true
           ssh-key: ${{ secrets.DEMO_DEPLOY_KEY }}
           repository-name: AyagamiDev/demo

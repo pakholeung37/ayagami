@@ -15,7 +15,7 @@ The model and the proprietary Cubism Native SDK cannot be redistributed in
 this repository. Place them at these paths from the monorepo root:
 
 ```text
-experiments/godot-demo/assets/live2d/mao/
+demos/godot-demo/assets/live2d/mao/
 crates/ayagami-godot/thirdparty/CubismSdkForNative-5-r.5/
 ```
 
@@ -29,15 +29,15 @@ crates/ayagami-godot/.venv/bin/python -m pip install scons==4.7.0
 
 ## Run
 
-Open `experiments/godot-demo/project.godot` with Godot 4.7 or newer, or launch
+Open `demos/godot-demo/project.godot` with Godot 4.7 or newer, or launch
 either scene from the monorepo root:
 
 ```sh
 /Applications/Godot_mono.app/Contents/MacOS/Godot \
-  --path experiments/godot-demo
+  --path demos/godot-demo
 
 /Applications/Godot_mono.app/Contents/MacOS/Godot \
-  --path experiments/godot-demo \
+  --path demos/godot-demo \
   res://ayagami_demo.tscn
 ```
 
@@ -45,28 +45,28 @@ Run the integration smoke tests with:
 
 ```sh
 /Applications/Godot_mono.app/Contents/MacOS/Godot \
-  --headless --path experiments/godot-demo \
+  --headless --path demos/godot-demo \
   --script res://tests/smoke_test.gd
 
 /Applications/Godot_mono.app/Contents/MacOS/Godot \
-  --headless --path experiments/godot-demo \
+  --headless --path demos/godot-demo \
   --script res://tests/ayagami_smoke_test.gd
 ```
 
 ## Ayagami through the Cubism Core ABI
 
-The temporary shim in `../cubism-core-shim/` exposes Ayagami through the
+The temporary shim in `crates/cubism-core-shim/` exposes Ayagami through the
 Cubism Core C ABI expected by the native framework. Run its complete
 build/copy/test/restore cycle from the monorepo root:
 
 ```sh
-experiments/cubism-core-shim/run_experiment.sh
+crates/cubism-core-shim/run_experiment.sh
 ```
 
 To launch the interactive demo with the shim installed temporarily:
 
 ```sh
-experiments/cubism-core-shim/run_demo.sh
+crates/cubism-core-shim/run_demo.sh
 ```
 
 Both scripts restore any pre-existing extension binaries when they exit.
@@ -78,7 +78,7 @@ cd crates/ayagami-godot
 .venv/bin/scons platform=macos arch=arm64 target=template_debug -j8
 cd ../..
 rsync -a --delete crates/ayagami-godot/demo/addons/gd_cubism/ \
-  experiments/godot-demo/addons/gd_cubism/
+  demos/godot-demo/addons/gd_cubism/
 ```
 
 The extension currently targets the Godot 4.3 ABI and has been exercised with

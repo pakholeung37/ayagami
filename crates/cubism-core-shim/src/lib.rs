@@ -591,7 +591,7 @@ mod tests {
     #[test]
     fn mao_model_exposes_the_expected_core_shape() {
         let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("../godot-demo/assets/live2d/mao/runtime/mao_pro.moc3");
+            .join("../../demos/godot-demo/assets/live2d/mao/runtime/mao_pro.moc3");
         let model = Arc::new(ParsedModel::load(&mut File::open(path).unwrap()).unwrap());
         let core = CoreModel::new(model);
         assert_eq!(core.parameter_values.len(), 128);

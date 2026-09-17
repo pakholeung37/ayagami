@@ -20,12 +20,12 @@ This software is developed strictly **using black-box reverse engineering only**
 Check out the [Web demo & model poser](https://demo.ayagami.dev)! This demo runs entirely in your browser, and your model data is not sent anywhere outside your machine. You can use it to manually pose your model (high quality screenshot feature coming soon).
 
 You can also build and run the demo as a native app by running `cargo run -r`
-in `apps/ayagami-demo`. Use `trunk serve --release` instead to run the web
+in `demos/ayagami-demo`. Use `trunk serve --release` instead to run the web
 version locally (using [trunk](https://trunk-rs.github.io/trunk/)).
 
 ## Status
 
-The API is pretty unstable and subject to change, and there is no documentation yet! crates.io release coming soon. For now, take a look at `apps/ayagami-demo` for a usage example.
+The API is pretty unstable and subject to change, and there is no documentation yet! crates.io release coming soon. For now, take a look at `demos/ayagami-demo` for a usage example.
 
 The code is messy; I'm releasing this early to get feedback on the API and start enabling users, but expect significant cleanup over time.
 
@@ -79,7 +79,7 @@ No docs yet, so here's a quick overview:
 * `ayagami::file::model` bridges the raw data model and higher level traits, providing a cleaner abstraction over the model data. This elides implementation specific data (likely intended for the original implementation, but not very useful/safe to rely on).
 * `ayagami::driver`: An API that builds on the `core` traits to compute model positions and deformations for a given pose. Essentially: model and parameters in, deformed ArtMeshes (draw objects) out. The core algorithms that implement the behavior of the models live here, including subtle ones like deformer interpolation/extrapolation.
 * `crates/ayagami-render`: A reference model renderer implementation, intended to be high quality, cross platform, efficient for desktop/VTubing use cases, and easy to integrate anywhere that `wgpu` can run. This implementation is suitable for engines that can run arbitrary GPU rendering code inside their render loop, or it can also be used to draw into an offscreen texture. Users who need more advanced features such as custom shaders, additional texture layers (emissive, normals, etc.), between-layer item rendering, effects, or tight integration into an existing engine are encouraged to use this renderer as a reference and either fork it or develop their own, using the `driver` API.
-* `apps/ayagami-demo`: A demo and test app for the rest of the stack, built using egui. This is what runs on [demo.ayagami.dev](https://demo.ayagami.dev). It lets you load a model, pan/zoom freely, and adjust all parameter values.
+* `demos/ayagami-demo`: A demo and test app for the rest of the stack, built using egui. This is what runs on [demo.ayagami.dev](https://demo.ayagami.dev). It lets you load a model, pan/zoom freely, and adjust all parameter values.
 
 ## Contributing
 

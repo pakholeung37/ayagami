@@ -17,12 +17,12 @@ cargo build -p ayagami-cubism-core
 
 cd crates/ayagami-godot
 rm -f demo/addons/gd_cubism/bin/libgd_cubism.macos.debug.framework/libgd_cubism.macos.debug
-CUBISM_CORE_LIBRARY=../target/debug/libayagami_cubism_core.a \
+CUBISM_CORE_LIBRARY=../../target/debug/libayagami_cubism_core.a \
   .venv/bin/scons platform=macos arch=arm64 target=template_debug -j8
 ```
 
 For the complete build/copy/test/restore cycle, run
-`experiments/cubism-core-shim/run_experiment.sh` from the repository root. It
+`crates/cubism-core-shim/run_experiment.sh` from the repository root. It
 temporarily installs the alternate extension into the demo,
 runs the ABI-specific and ordinary gd_cubism smoke tests, and restores both
 pre-existing binaries even if a command fails.
